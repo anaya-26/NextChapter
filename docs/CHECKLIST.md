@@ -47,7 +47,8 @@ Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, exp
 - ✅ Mistake library linked to questions and explanations; later correct answers resolve mistakes; recurring difficulties highlighted
 - ✅ Spaced revision scheduled into the calendar (student's time zone), next interval adapted to recall
 - ✅ Read-aloud recaps with the device's voice (en-IN / hi-IN / mr-IN)
-- ⏳ Audio recaps generated server-side; teach-back by voice (Stage 7 companion)
+- 🟡 Recaps and companion replies are read aloud by the device’s voice; no server-side audio files are generated
+- 🟡 Teach-back by voice: dictate with the browser’s speech input (needs browser support; Chrome sends audio to Google, and the app says so)
 
 ## 5. Resources & coverage
 - ✅ Coverage of syllabus topics by uploaded materials (covered / partly / missing), with the estimate explained; manual links always count
@@ -56,7 +57,16 @@ Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, exp
 - ✅ Trusted directory (NCERT, DIKSHA, NPTEL, SWAYAM, NDLI, Khan Academy, OpenStax, MIT OCW, YouTube, Wikipedia) works without AI
 - ✅ Save, dismiss and add own links (validated, ownership-checked)
 - ⏳ Community-flagged incorrect resources (Stage 11)
-## 6. Companion — ⏳ Stage 7
+## 6. Companion
+- ✅ Available from every page (floating button and nav); opened from a topic, it knows the topic and uses passages from the student’s own materials as reference data, kept apart from its instructions
+- ✅ Streaming replies, each labelled AI / simulated AI / not AI, with a “Used: …” line listing the data categories it drew on — only those allowed in Privacy, and only journal entries the student shared
+- ✅ Suggestions become buttons; nothing happens until the student clicks; only allow-listed actions (book a session, focus timer, plan the week, fresh start, open a topic or practice, flashcards, mistakes, add a goal, reflect)
+- ✅ Tone slider from friendly study buddy to firm, respectful mentor; how hard to push; reminder frequency
+- ✅ Starters for “what now”, planning, falling behind, reflection and careers; conversations listed, renamed from the first message, deletable
+- ✅ Distress is answered with support (Tele-MANAS 14416, emergency 112) without calling the AI
+- ✅ Without AI it explains what it can still do and offers the same actions; usage limits are explained
+- ✅ Conversation memories only when memory is on, always tentative, visible and deletable in Settings → Memory
+- 🟡 Voice input uses the browser’s speech recognition (not available in every browser); replies can be read aloud
 ## 7. Calendar & time management
 - ✅ Week grid (desktop) and agenda (phone): classes, assignments, exams, revision, projects, focus, applications, personal, reminders; regular commitments and Google busy blocks shown alongside
 - ✅ Events with repeats (daily/weekly, until), reminders, countdowns, deadlines that don’t block time, places and notes; edit, delete, mark done
@@ -81,7 +91,16 @@ Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, exp
 - ✅ Real improvement: study time per week (planned vs actual), practice accuracy and recall-at-revision trends, improvement claimed only with enough data
 - ✅ Consistency heatmap (no streak loss), returns after breaks celebrated, topics studied / understanding checked / revised per subject, recurring difficulties
 - ✅ Personal experiments: templates suggested from the study log or the student’s own design; baseline vs during, honest small-sample notes, student verdict and reflection; sessions linked to the running experiment
-## 10. Goals & career discovery — 🟡 goals, milestones, priority, career interests done; discovery review ⏳ Stage 8
+## 10. Goals & career discovery
+- ✅ Goals with why-it-matters, milestones, current priority; career interests with roles, companies, cities and work modes
+- ✅ Students with a clear direction get skills, starter projects, roles and ways in for 22 domains immediately (labelled general starting points), and a one-click goal with milestones
+- ✅ Discovery review after about three months (84 days since starting and 30 active days); missed days never reset anything; progress shown
+- ✅ Preliminary findings from 3 active days, clearly labelled as preliminary
+- ✅ Each possibility shows what points there, the evidence, what’s uncertain, a next step suited to the education stage, and an exploration project; a “Limits” section lists data not used and demo days
+- ✅ Weak activity (a few minutes in a subject) isn’t treated as evidence
+- ✅ Explorations (mini projects, simulations described as learning activities, informational interviews, reading): reflection, “more / same / less interested”, XP once
+- ✅ Rule-based review without AI; with AI, Claude refines a draft the app computed from permitted data
+- ✅ Test clock: labelled demonstration history (Settings → Developer) unlocks the full review in tests and demos
 ## 11. Opportunities — ⏳ Stage 9
 ## 12. Portfolio & CV — ⏳ Stage 10
 ## 13. XP & visible growth

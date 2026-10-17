@@ -6,7 +6,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import { ExternalLink, Shapes } from "lucide-react";
+import { ExternalLink, Shapes, Volume2 } from "lucide-react";
 import { locationLabel, sourceHref } from "@/lib/citations";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/overlay";
 import { Button } from "@/components/ui/button";
@@ -131,7 +131,7 @@ export function CitedMarkdown({ markdown, citations = [] }: { markdown: string; 
 }
 
 /** Reads text aloud with the device's own voice (works offline, no data sent anywhere). */
-export function ListenButton({ text, lang }: { text: string; lang: string }) {
+export function ListenButton({ text, lang, compact = false }: { text: string; lang: string; compact?: boolean }) {
   const [speaking, setSpeaking] = useState(false);
   const supported = useSyncExternalStore(noSubscribe, () => "speechSynthesis" in window, () => false);
   if (!supported) return null;
@@ -149,8 +149,9 @@ export function ListenButton({ text, lang }: { text: string; lang: string }) {
     setSpeaking(true);
   };
   return (
-    <Button size="sm" variant="outline" onClick={toggle} aria-pressed={speaking}>
-      {speaking ? "Stop audio recap" : "Listen to recap"}
+    <Button size="sm" variant={compact ? "ghost" : "outline"} className={compact ? "h-7 px-2 text-xs" : undefined} onClick={toggle} aria-pressed={speaking}>
+      {compact ? <Volume2 aria-hidden /> : null}
+      {compact ? (speaking ? "Stop" : "Listen") : speaking ? "Stop audio recap" : "Listen to recap"}
     </Button>
   );
 }

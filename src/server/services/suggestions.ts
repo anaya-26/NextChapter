@@ -4,13 +4,24 @@ import { prisma } from "../db";
 import { getProfile } from "./profile";
 import { preferredStartTime, scheduleRevision } from "./revision";
 import { proposeExperiment } from "./experiments";
+import { createEvent } from "./calendar";
+import { createGoal } from "./goals";
+import { startAdHocSession } from "./sessions";
 
 /**
  * Suggested next steps from the journal, weekly reviews and the planner. Each is a proposal:
  * accepting performs one concrete action (or opens the right page); dismissing hides it.
  */
 
-type Payload = { topicId?: string | null; subjectId?: string | null; templateId?: string | null };
+type Payload = {
+  topicId?: string | null;
+  subjectId?: string | null;
+  templateId?: string | null;
+  title?: string | null;
+  when?: "today" | "tomorrow" | null;
+  time?: string | null;
+  minutes?: number | null;
+};
 
 export async function openSuggestions(userId: string, opts: { origin?: "JOURNAL" | "WEEKLY_REVIEW"; sourceId?: string } = {}) {
   return prisma.suggestedAction.findMany({
@@ -35,7 +46,49 @@ export async function acceptSuggestion(userId: string, id: string, at: Date): Pr
       break;
     }
     case "REVISIT_TOPIC":
+    case "OPEN_TOPIC":
       out = { href: topicHref, message: "Opening the topic" };
+      break;
+    case "SCHEDULE_STUDY": {
+      const profile = await getProfile(userId);
+      const todayKey = localDateKey(at, profile.timezone);
+      const dateKey = p.when === "today" ? todayKey : addDaysToKey(todayKey, 1);
+      const minutes = p.minutes ?? 45;
+      const event = await createEvent(userId, {
+        title: p.title || "Study session",
+        kind: "STUDY",
+        dateKey,
+        startTime: p.time ?? preferredStartTime(profile.preferredStudyTimes),
+        durationMinutes: minutes,
+        allDay: false,
+        rrule: null,
+        reminderMinutes: [10],
+        showCountdown: false,
+        isDeadline: false,
+        topicId: p.topicId ?? null,
+      });
+      await prisma.studySession.create({ data: { userId, title: event.title, status: "PLANNED", plannedStart: event.startAt, plannedMinutes: minutes, topicId: event.topicId, subjectId: event.subjectId, calendarEventId: event.id } });
+      out = { href: `/calendar?date=${dateKey}`, message: "Added to your calendar" };
+      break;
+    }
+    case "START_FOCUS": {
+      const session = await startAdHocSession(userId, { title: "Focus session", topicId: p.topicId ?? null, plannedMinutes: p.minutes ?? 25 }, at);
+      out = { href: `/study/${session.id}`, message: "Focus session started" };
+      break;
+    }
+    case "REVIEW_FLASHCARDS":
+      out = { href: "/learn/review", message: "Opening flashcard review" };
+      break;
+    case "ADD_GOAL": {
+      await createGoal(userId, { title: (p.title || s.title).slice(0, 160), description: null, whyItMatters: null, horizon: "SHORT", category: "ACADEMIC", targetDate: null, isCurrentPriority: false }, "SUGGESTION");
+      out = { href: "/goals", message: "Goal added — edit it any time" };
+      break;
+    }
+    case "WRITE_REFLECTION":
+      out = { href: "/journal", message: "Opening your journal" };
+      break;
+    case "RESTART_PLAN":
+      out = { href: "/calendar/restart", message: "Opening fresh-start options" };
       break;
     case "PRACTICE_TOPIC":
       out = { href: `${topicHref}?tab=practice`, message: "Opening practice" };

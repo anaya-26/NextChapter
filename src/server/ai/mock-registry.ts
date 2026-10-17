@@ -4,3 +4,5 @@ import "./mocks/syllabus";
 import "./mocks/learning";
 import "./mocks/calendar";
 import "./mocks/journal";
+import "./mocks/companion";
+import "./mocks/career";

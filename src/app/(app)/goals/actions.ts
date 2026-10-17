@@ -5,6 +5,8 @@ import { fail, fieldErrorsFrom, formToObject, type ActionResult } from "@/lib/ac
 import { careerInterestSchema, goalSchema, milestoneSchema } from "@/lib/validation";
 import { requireUser } from "@/server/session";
 import { now } from "@/server/clock";
+import { describeAiError } from "@/server/ai";
+import { completeExploration, createDomainGoal, dropExploration, generateCareerReview, reviewFeedback, startExploration } from "@/server/services/career";
 import {
   addMilestone,
   createGoal,
@@ -88,4 +90,63 @@ export async function removeCareerInterest(id: string) {
   const user = await requireUser();
   await deleteCareerInterest(user.id, id);
   refresh();
+}
+
+/* ── Career discovery ─────────────────────────────────────────────── */
+
+export async function generateCareerReviewAction(): Promise<ActionResult> {
+  const user = await requireUser();
+  try {
+    await generateCareerReview(user.id, await now(user.id));
+  } catch (e) {
+    return fail(e instanceof Error && !e.name.startsWith("Ai") ? e.message : describeAiError(e));
+  }
+  refresh();
+  return { ok: true, message: "Your review is ready" };
+}
+
+export async function startExplorationAction(input: { reviewId?: string; index?: number; domain?: string }): Promise<ActionResult> {
+  const user = await requireUser();
+  try {
+    await startExploration(user.id, input);
+  } catch (e) {
+    return fail(e instanceof Error ? e.message : "Couldn't start");
+  }
+  refresh();
+  return { ok: true, message: "Exploration added — see “Explorations” below" };
+}
+
+export async function completeExplorationAction(id: string, _prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  const reflection = String(form.get("reflection") ?? "").trim();
+  const interest = String(form.get("interest") ?? "");
+  if (reflection.length < 10) return fail("Write a sentence or two about what you noticed", { reflection: "Too short" });
+  if (!["MORE", "SAME", "LESS"].includes(interest)) return fail("How do you feel about this area now?", { interest: "Pick one" });
+  await completeExploration(user.id, id, { reflection, interest: interest as "MORE" }, await now(user.id));
+  refresh();
+  return { ok: true, message: "Exploration complete — that’s real evidence for your next review" };
+}
+
+export async function dropExplorationAction(id: string) {
+  const user = await requireUser();
+  await dropExploration(user.id, id);
+  refresh();
+}
+
+export async function reviewFeedbackAction(reviewId: string, _prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const user = await requireUser();
+  await reviewFeedback(user.id, reviewId, String(form.get("feedback") ?? ""));
+  refresh();
+  return { ok: true, message: "Thanks — noted for next time" };
+}
+
+export async function createDomainGoalAction(domain: string): Promise<ActionResult> {
+  const user = await requireUser();
+  try {
+    await createDomainGoal(user.id, domain);
+  } catch (e) {
+    return fail(e instanceof Error ? e.message : "Couldn't create the goal");
+  }
+  refresh();
+  return { ok: true, message: "Goal created with milestones — see Goals" };
 }
