@@ -58,3 +58,70 @@ export async function applyAgeBand(userId: string, ageBand: AgeBand) {
     });
   }
 }
+
+export type ProfilePatch = Prisma.StudentProfileUpdateInput;
+
+export async function updateProfile(userId: string, patch: ProfilePatch) {
+  await getProfile(userId);
+  return prisma.studentProfile.update({ where: { userId }, data: patch });
+}
+
+export async function updatePrivacy(userId: string, patch: Prisma.PrivacySettingsUpdateInput) {
+  await getPrivacy(userId);
+  const profile = await getProfile(userId);
+  // Children's behavioural-pattern inference stays off until guardian consent is recorded.
+  if (isMinor(profile.ageBand) && profile.guardianConsent !== "RECORDED") {
+    patch = { ...patch, aiInferPatterns: false, communityVisible: false };
+  }
+  const updated = await prisma.privacySettings.update({ where: { userId }, data: patch });
+  if (updated.aiUseJournal === false) {
+    // Revoking journal access also removes everything the AI learned from the journal.
+    await prisma.memoryItem.deleteMany({ where: { userId, journalEntryId: { not: null } } });
+  }
+  if (!updated.aiInferPatterns) {
+    await prisma.memoryItem.deleteMany({ where: { userId, source: "INFERRED" } });
+  }
+  return updated;
+}
+
+/** Records a guardian's consent as attested by the student (verifiable consent is an outstanding integration). */
+export async function recordGuardianConsent(userId: string, at: Date) {
+  return prisma.studentProfile.update({
+    where: { userId },
+    data: { guardianConsent: "RECORDED", guardianConsentAt: at },
+  });
+}
+
+export async function advanceOnboarding(userId: string, step: number, complete = false, at = new Date()) {
+  const profile = await getProfile(userId);
+  return prisma.studentProfile.update({
+    where: { userId },
+    data: {
+      onboardingStep: Math.max(profile.onboardingStep, step),
+      ...(complete && !profile.onboardingCompletedAt ? { onboardingCompletedAt: at } : {}),
+    },
+  });
+}
+
+/** How complete the progressive profile is (0–100) and what is still missing. */
+export function profileCompleteness(p: {
+  educationStage: unknown;
+  course: string | null;
+  examTargets: string[];
+  interests: string[];
+  careerClarity: unknown;
+  weeklyStudyHoursTarget: number | null;
+  ageBand: string;
+}) {
+  const checks: [boolean, string][] = [
+    [!!p.educationStage, "education stage"],
+    [!!p.course, "course or class"],
+    [p.examTargets.length > 0, "exam targets"],
+    [p.interests.length > 0, "interests"],
+    [!!p.careerClarity, "career direction"],
+    [p.weeklyStudyHoursTarget != null, "weekly study time"],
+    [p.ageBand !== "UNDISCLOSED", "age group"],
+  ];
+  const done = checks.filter(([ok]) => ok).length;
+  return { percent: Math.round((done / checks.length) * 100), missing: checks.filter(([ok]) => !ok).map(([, l]) => l) };
+}

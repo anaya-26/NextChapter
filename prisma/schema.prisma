@@ -344,6 +344,7 @@ model Subject {
   examDate          DateTime?
   color             String?
   status            SubjectStatus   @default(ACTIVE)
+  isDemo            Boolean         @default(false)
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   syllabi           Syllabus[]
@@ -897,6 +898,7 @@ model Mistake {
   reviewCount     Int              @default(0)
   nextReviewAt    DateTime?
   resolvedAt      DateTime?
+  isDemo          Boolean          @default(false)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   flashcards      Flashcard[]
@@ -1027,6 +1029,7 @@ model Experiment {
   verdict     ExperimentVerdict?
   reflection  String?
   suggestedBy GeneratedBy        @default(STUDENT)
+  isDemo      Boolean            @default(false)
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   sessions    StudySession[]

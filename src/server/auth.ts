@@ -26,6 +26,8 @@ function createAuth() {
       expiresIn: 60 * 60 * 24 * 30,
       updateAge: 60 * 60 * 24,
     },
+    // Students can delete their account and all data (password re-entry required).
+    user: { deleteUser: { enabled: true } },
     rateLimit: { enabled: e.NODE_ENV === "production", window: 60, max: 30 },
     databaseHooks: {
       user: {
