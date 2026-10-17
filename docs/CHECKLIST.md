@@ -2,7 +2,7 @@
 
 Legend: ✅ done and tested · 🟡 partial / works with limitations · ⏳ planned in a later stage · 🔌 needs an external credential to go live
 
-Last updated: Stage 2 (syllabus & roadmap).
+Last updated: Stage 3 (topic workspace, resources & coverage).
 
 ## Foundation
 - ✅ Next.js 16.4 App Router (Cache Components + Partial Prefetching), TypeScript, Tailwind v4 design tokens (light/dark, Lite mode)
@@ -31,10 +31,31 @@ Last updated: Stage 2 (syllabus & roadmap).
 - ✅ Correction & confirmation step (rename, reorder, move, add, delete, kinds, assessment edits) with originals side by side
 - ✅ Full roadmap: objectives, prerequisites, suggested sequence, effort, progress (studied / understanding checked / revised tracked separately)
 - ✅ Reorder, skip familiar topics, revisit foundations, required vs background vs optional (labelled AI/simulated/student)
-- ✅ Detailed material is generated when a topic is opened (Stage 3)
+- ✅ Detailed material is generated when a topic is opened (not before)
 
-## 4. Topic learning workspace — ⏳ Stage 3
-## 5. Resources & coverage — ⏳ Stage 3
+## 4. Topic learning workspace
+- ✅ Uploads: PDF, DOCX, PPTX, text, images, audio, video, captions (.vtt/.srt) with progress bar, size limits, per-file errors, retry and delete; pasted text
+- ✅ Recordings: captions paired by file name become a timestamped transcript; 🔌 automatic transcription with a Whisper-compatible service (`TRANSCRIPTION_API_*`)
+- 🟡 Images: Claude vision when AI is configured, else offline OCR (`OCR_LOCAL_ENABLED`)
+- ✅ Originals stay available (owner-only streaming with byte ranges, download); source viewer opens at the cited page or timestamp and seeks the player
+- ✅ Lessons in four modes (simpler, standard, deeper, exam-focused) with numbered citations to passages, pages and timestamps; groundedness label; "beyond your materials" warnings; Markdown, LaTeX maths, Mermaid diagrams (click-to-load in Lite mode)
+- ✅ Without AI: "What your materials say" passages, objectives, notes, own questions, flashcards, revision and the resource directory still work
+- ✅ Editable Markdown notes (preview, download), AI drafts labelled until edited
+- ✅ Flashcards: own cards, cards from notes (flagged when the note changes later), cards from mistakes, FSRS spaced review with interval previews and keyboard shortcuts, Anki-compatible export
+- ✅ Practice: quick check, numericals (tolerance, power-of-ten and sign hints), written answers with key points, teach-back, exam-style; hints; generated practice and AI feedback labelled; self-assessment when AI is off; write-your-own questions
+- ✅ Understanding check (≥3 answers, ≥70%) awards a badge once and never blocks the roadmap
+- ✅ Mistake library linked to questions and explanations; later correct answers resolve mistakes; recurring difficulties highlighted
+- ✅ Spaced revision scheduled into the calendar (student's time zone), next interval adapted to recall
+- ✅ Read-aloud recaps with the device's voice (en-IN / hi-IN / mr-IN)
+- ⏳ Audio recaps generated server-side; teach-back by voice (Stage 7 companion)
+
+## 5. Resources & coverage
+- ✅ Coverage of syllabus topics by uploaded materials (covered / partly / missing), with the estimate explained; manual links always count
+- ✅ Gap list links straight to each topic's resources
+- ✅ Claude web search for readings, videos, OER and PDFs: only URLs the search returned are kept; relevance, difficulty, free/paid shown; link checks with date; unreachable links flagged
+- ✅ Trusted directory (NCERT, DIKSHA, NPTEL, SWAYAM, NDLI, Khan Academy, OpenStax, MIT OCW, YouTube, Wikipedia) works without AI
+- ✅ Save, dismiss and add own links (validated, ownership-checked)
+- ⏳ Community-flagged incorrect resources (Stage 11)
 ## 6. Companion — ⏳ Stage 7
 ## 7. Calendar & time management — ⏳ Stage 4
 ## 8. Journal & study log — ⏳ Stage 5

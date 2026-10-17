@@ -22,7 +22,7 @@ export default async function MemoryPage() {
 
       {!privacy.aiMemoryEnabled ? (
         <Notice tone="info" title="Memory is switched off">
-          The companion won't use or add memories. <Link href="/settings/privacy">Change in Privacy</Link>.
+          The companion won’t use or add memories. <Link href="/settings/privacy">Change in Privacy</Link>.
         </Notice>
       ) : null}
 

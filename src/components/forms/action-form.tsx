@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useActionState, useContext, useEffect, useRef, type ReactNode } from "react";
+import { createContext, useActionState, useContext, useEffect, useEffectEvent, useRef, type ReactNode } from "react";
 import { toast } from "sonner";
 import type { ActionResult } from "@/lib/action";
 import { cn } from "@/lib/utils";
@@ -32,14 +32,13 @@ export function ActionForm({
 }) {
   const [state, formAction] = useActionState(action, { ok: false } as ActionResult<unknown>);
   const formRef = useRef<HTMLFormElement>(null);
-  const onSuccessRef = useRef(onSuccess);
-  onSuccessRef.current = onSuccess;
+  const notifySuccess = useEffectEvent((result: ActionResult<unknown>) => onSuccess?.(result));
 
   useEffect(() => {
     if (state.ok) {
       if (state.message && !silent) toast.success(state.message);
       if (resetOnSuccess) formRef.current?.reset();
-      onSuccessRef.current?.(state);
+      notifySuccess(state);
     } else if (state.message) {
       toast.error(state.message);
     }

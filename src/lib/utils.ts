@@ -53,3 +53,20 @@ export function hostOf(url: string): string {
     return url;
   }
 }
+
+/** Readable plain text from lesson markdown (for read-aloud): drops markup, citations, diagrams and LaTeX syntax. */
+export function markdownToSpeech(markdown: string): string {
+  return markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/\[\[\d+\]\]/g, "")
+    .replace(/\$\$[\s\S]*?\$\$/g, " (see the formula on screen) ")
+    .replace(/\$([^$\n]+)\$/g, (_, m: string) => m.replace(/\\[a-z]+/gi, " ").replace(/[{}^_]/g, " "))
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/[*_`>|]/g, "")
+    .replace(/\n{2,}/g, ". ")
+    .replace(/\s+/g, " ")
+    .replace(/([.!?:])(\s*\.)+/g, "$1")
+    .trim();
+}

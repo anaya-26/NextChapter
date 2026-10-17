@@ -20,7 +20,8 @@ export type AiFeature =
   | "resource_search"
   | "interview_feedback"
   | "cv_tailor"
-  | "note_draft";
+  | "note_draft"
+  | "image_read";
 
 export type Effort = "low" | "medium" | "high";
 

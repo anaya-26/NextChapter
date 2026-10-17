@@ -62,11 +62,12 @@ export async function readFileBuffer(key: string): Promise<Buffer> {
   return readFile(resolveKey(key));
 }
 
-export async function fileStream(key: string) {
+export async function fileStream(key: string, range?: { start: number; end: number }) {
   const full = resolveKey(key);
   const info = await stat(full);
-  return { stream: createReadStream(full), size: info.size };
+  return { stream: createReadStream(full, range), size: info.size };
 }
+
 
 export async function deleteFile(key: string) {
   await rm(resolveKey(key), { force: true });

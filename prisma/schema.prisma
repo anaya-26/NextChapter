@@ -556,6 +556,8 @@ model Source {
   textLength       Int?
   extractionMethod String?
   language         String?
+  /// For caption files: the audio/video source these captions transcribe
+  captionsForId    String?
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   chunks           SourceChunk[]

@@ -76,7 +76,7 @@ export class MockProvider implements AiProvider {
 
 function mockChatReply(req: TextRequest): string {
   const last = [...req.messages].reverse().find((m) => m.role === "user")?.content ?? "";
-  const responder = mockResponders.companion_chat_text;
+  const responder = mockResponders[`${req.feature}_text`] ?? mockResponders.companion_chat_text;
   if (responder) {
     const out = responder(req as never);
     if (typeof out === "string") return out;

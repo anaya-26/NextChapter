@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, CalendarClock, Clock, FileUp, Link2, ListChecks, Pencil, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarClock, Clock, FileStack, FileUp, Link2, ListChecks, Pencil, Sparkles } from "lucide-react";
 import { prisma } from "@/server/db";
 import { requireUser } from "@/server/session";
 import { now } from "@/server/clock";
@@ -83,6 +83,9 @@ export default async function RoadmapPage(props: PageProps<"/learn/[subjectId]">
         actions={
           <>
             {syllabus.extractionMethod ? <ExtractionBadge method={syllabus.extractionMethod} /> : null}
+            <Link href={`/learn/${subject.id}/materials`} className={buttonVariants({ variant: "outline", size: "sm" })}>
+              <FileStack /> Materials
+            </Link>
             <form action={reopenSyllabus.bind(null, syllabus.id)}>
               <button type="submit" className={buttonVariants({ variant: "outline", size: "sm" })}>
                 <Pencil /> Edit syllabus
@@ -205,6 +208,7 @@ export default async function RoadmapPage(props: PageProps<"/learn/[subjectId]">
                       {t.description && t.kind !== "REQUIRED" ? <p className="mt-0.5 text-sm text-muted">{t.description}</p> : null}
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
                         <TopicProgressMarks {...t} />
+                        {t.coverage === "MISSING" ? <span className="text-danger">Not in your materials</span> : t.coverage === "PARTIAL" ? <span className="text-warning">Partly in your materials</span> : null}
                         {t.estimatedMinutes ? (
                           <span className="inline-flex items-center gap-1">
                             <Clock className="size-3.5" aria-hidden /> ~{formatDuration(t.estimatedMinutes)}
