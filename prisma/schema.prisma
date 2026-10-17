@@ -1,0 +1,2129 @@
+// Kadam — connected data model.
+//
+// Conventions
+// - Every student-owned row carries `userId`; the data-access layer (src/server/dal)
+//   always filters by the signed-in user's id. Root aggregates cascade-delete with the user.
+// - `isDemo` marks labelled demonstration data so the UI can badge it.
+// - `generatedBy` records whether content came from AI, the mock test double, rules, or the student.
+// - Times are stored as UTC instants; `timezone` (IANA) is kept alongside where local meaning matters.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────────── Auth (Better Auth core schema) ─────────────────────────────
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  profile            StudentProfile?
+  privacy            PrivacySettings?
+  commitments        Commitment[]
+  memories           MemoryItem[]
+  subjects           Subject[]
+  syllabi            Syllabus[]
+  topics             Topic[]
+  sources            Source[]
+  resources          Resource[]
+  lessons            Lesson[]
+  notes              Note[]
+  flashcards         Flashcard[]
+  practiceSets       PracticeSet[]
+  questions          Question[]
+  attempts           PracticeAttempt[]
+  mistakes           Mistake[]
+  revisionTasks      RevisionTask[]
+  studySessions      StudySession[]
+  experiments        Experiment[]
+  calendarEvents     CalendarEvent[]
+  calendarConnection CalendarConnection?
+  calendarChanges    CalendarChange[]
+  busyBlocks         BusyBlock[]
+  notifications      Notification[]
+  journalEntries     JournalEntry[]
+  weeklyReviews      WeeklyReview[]
+  goals              Goal[]
+  careerInterests    CareerInterest[]
+  careerReviews      CareerReview[]
+  explorations       ExplorationProject[]
+  ownedOpportunities Opportunity[]        @relation("OpportunityOwner")
+  applications       Application[]
+  interviewPractice  InterviewPractice[]
+  achievements       Achievement[]
+  educationRecords   EducationRecord[]
+  cvs                Cv[]
+  xpEvents           XpEvent[]
+  badges             UserBadge[]
+  communityProfile   CommunityProfile?
+  groupMemberships   GroupMember[]
+  posts              Post[]
+  comments           Comment[]
+  reactions          Reaction[]
+  flagsRaised        ContentFlag[]        @relation("FlagReporter")
+  blocking           Block[]              @relation("Blocker")
+  blockedBy          Block[]              @relation("Blocked")
+  hostedRooms        FocusRoom[]
+  focusParticipation FocusParticipant[]
+  buddyRequestsSent  StudyBuddyRequest[]  @relation("BuddyRequester")
+  buddyRequestsGot   StudyBuddyRequest[]  @relation("BuddyRecipient")
+  conversations      Conversation[]
+  suggestedActions   SuggestedAction[]
+  aiUsage            AiUsage[]
+  files              StoredFile[]
+  testClock          TestClock?
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// ───────────────────────────── Profile & personalisation ─────────────────────────────
+
+enum EducationStage {
+  SCHOOL
+  HIGHER_SECONDARY
+  UNDERGRADUATE
+  POSTGRADUATE
+  DIPLOMA
+  COMPETITIVE_EXAM
+  OTHER
+}
+
+enum AgeBand {
+  UNDER_13
+  TEEN_13_15
+  TEEN_16_17
+  ADULT
+  UNDISCLOSED
+}
+
+enum ConsentStatus {
+  NOT_REQUIRED
+  PENDING
+  RECORDED
+}
+
+enum CareerClarity {
+  CLEAR
+  EXPLORING
+  UNSURE
+}
+
+enum CoachingIntensity {
+  GENTLE
+  BALANCED
+  FIRM
+}
+
+enum ReminderFrequency {
+  OFF
+  MINIMAL
+  NORMAL
+  FREQUENT
+}
+
+model StudentProfile {
+  id                     String            @id @default(cuid())
+  userId                 String            @unique
+  user                   User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName            String?
+  educationStage         EducationStage?
+  boardOrUniversity      String?
+  institution            String?
+  course                 String?
+  yearOrClass            String?
+  qualificationsDone     String[]
+  qualificationsPursuing String[]
+  examTargets            String[]
+  skills                 String[]
+  interests              String[]
+  ambitions              String?
+  careerClarity          CareerClarity?
+  selectedDomains        String[]
+  preferredLanguage      String            @default("en")
+  explanationLanguage    String            @default("en")
+  examAnswerLanguage     String            @default("en")
+  timezone               String            @default("Asia/Kolkata")
+  weeklyStudyHoursTarget Int?
+  preferredStudyTimes    String[]
+  ageBand                AgeBand           @default(UNDISCLOSED)
+  guardianConsent        ConsentStatus     @default(NOT_REQUIRED)
+  guardianConsentAt      DateTime?
+  /// 0 = friendly study buddy … 100 = firm, respectful mentor
+  companionTone          Int               @default(30)
+  coachingIntensity      CoachingIntensity @default(BALANCED)
+  reminderFrequency      ReminderFrequency @default(NORMAL)
+  quietMode              Boolean           @default(false)
+  liteMode               Boolean           @default(false)
+  showGrowthVisual       Boolean           @default(true)
+  onboardingStep         Int               @default(0)
+  onboardingCompletedAt  DateTime?
+  demoDataLoadedAt       DateTime?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+}
+
+/// What the AI companion may use. Journal access is additionally opt-in per entry.
+model PrivacySettings {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  aiUseProfile     Boolean  @default(true)
+  aiUseProgress    Boolean  @default(true)
+  aiUseGoals       Boolean  @default(true)
+  aiUseCalendar    Boolean  @default(true)
+  aiUseJournal     Boolean  @default(false)
+  aiInferPatterns  Boolean  @default(true)
+  aiMemoryEnabled  Boolean  @default(true)
+  communityVisible Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+enum CommitmentKind {
+  CLASS
+  COACHING
+  COMMUTE
+  WORK
+  CHORES
+  FAMILY
+  HEALTH
+  SLEEP
+  OTHER
+}
+
+/// Recurring weekly commitments that reduce available study time.
+model Commitment {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  kind       CommitmentKind
+  /// 0 = Sunday … 6 = Saturday
+  daysOfWeek Int[]
+  /// "HH:MM" in the student's timezone
+  startTime  String
+  endTime    String
+  location   String?
+  flexible   Boolean        @default(false)
+  notes      String?
+  active     Boolean        @default(true)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@index([userId])
+}
+
+enum MemoryKind {
+  FACT
+  PREFERENCE
+  GOAL_CONTEXT
+  OBSTACLE
+  PATTERN
+  STRENGTH
+  DIFFICULTY
+}
+
+enum MemorySource {
+  PROFILE
+  CONVERSATION
+  JOURNAL
+  PRACTICE
+  STUDY_LOG
+  INFERRED
+  STUDENT
+}
+
+enum MemoryCertainty {
+  STATED
+  TENTATIVE
+  CONFIRMED
+}
+
+enum MemoryStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+/// Everything the companion "remembers". Students can view, correct and delete each item.
+/// Deleting a journal entry (or revoking its AI access) removes memories derived from it.
+model MemoryItem {
+  id             String          @id @default(cuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           MemoryKind
+  content        String
+  source         MemorySource
+  certainty      MemoryCertainty @default(TENTATIVE)
+  status         MemoryStatus    @default(ACTIVE)
+  evidence       String?
+  correctedFrom  String?
+  journalEntryId String?
+  journalEntry   JournalEntry?   @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  conversationId String?
+  conversation   Conversation?   @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  lastUsedAt     DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([userId, status])
+}
+
+// ───────────────────────────── Syllabus, roadmap & sources ─────────────────────────────
+
+enum SubjectStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+model Subject {
+  id                String          @id @default(cuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String
+  code              String?
+  boardOrUniversity String?
+  examDate          DateTime?
+  color             String?
+  status            SubjectStatus   @default(ACTIVE)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  syllabi           Syllabus[]
+  sources           Source[]
+  notes             Note[]
+  resources         Resource[]
+  studySessions     StudySession[]
+  calendarEvents    CalendarEvent[]
+
+  @@index([userId])
+}
+
+enum SyllabusStatus {
+  DRAFT
+  EXTRACTING
+  NEEDS_REVIEW
+  CONFIRMED
+}
+
+enum ExtractionMethod {
+  AI
+  RULES
+  OCR_RULES
+  MANUAL
+  MOCK
+}
+
+model Syllabus {
+  id               String            @id @default(cuid())
+  userId           String
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjectId        String
+  subject          Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  title            String
+  status           SyllabusStatus    @default(DRAFT)
+  rawText          String?
+  extractionMethod ExtractionMethod?
+  extractionNotes  String[]
+  /// Only assessment details explicitly stated in the syllabus: [{label, detail, excerpt, uncertain}]
+  assessment       Json?
+  confirmedAt      DateTime?
+  version          Int               @default(1)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  units            SyllabusUnit[]
+  topics           Topic[]
+  sources          Source[]
+
+  @@index([userId, subjectId])
+}
+
+model SyllabusUnit {
+  id            String   @id @default(cuid())
+  syllabusId    String
+  syllabus      Syllabus @relation(fields: [syllabusId], references: [id], onDelete: Cascade)
+  title         String
+  order         Int
+  uncertain     Boolean  @default(false)
+  sourceExcerpt String?
+  topics        Topic[]
+
+  @@index([syllabusId, order])
+}
+
+enum TopicKind {
+  REQUIRED
+  BACKGROUND
+  OPTIONAL
+}
+
+enum TopicStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  STUDIED
+  SKIPPED
+}
+
+enum CoverageStatus {
+  UNKNOWN
+  COVERED
+  PARTIAL
+  MISSING
+}
+
+/// A roadmap node. Studied / Understanding checked / Revised are tracked separately.
+model Topic {
+  id                     String              @id @default(cuid())
+  userId                 String
+  user                   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syllabusId             String
+  syllabus               Syllabus            @relation(fields: [syllabusId], references: [id], onDelete: Cascade)
+  unitId                 String?
+  unit                   SyllabusUnit?       @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  title                  String
+  description            String?
+  kind                   TopicKind           @default(REQUIRED)
+  order                  Int
+  objectives             String[]
+  estimatedMinutes       Int?
+  uncertain              Boolean             @default(false)
+  sourceExcerpt          String?
+  status                 TopicStatus         @default(NOT_STARTED)
+  isFamiliar             Boolean             @default(false)
+  skippedReason          String?
+  studiedAt              DateTime?
+  understandingCheckedAt DateTime?
+  lastRevisedAt          DateTime?
+  revisionCount          Int                 @default(0)
+  coverage               CoverageStatus      @default(UNKNOWN)
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  prerequisites          TopicPrerequisite[] @relation("TopicDependsOn")
+  dependents             TopicPrerequisite[] @relation("TopicRequiredBy")
+  sourceLinks            TopicSource[]
+  lessons                Lesson[]
+  notes                  Note[]
+  flashcards             Flashcard[]
+  practiceSets           PracticeSet[]
+  questions              Question[]
+  attempts               PracticeAttempt[]
+  mistakes               Mistake[]
+  revisionTasks          RevisionTask[]
+  resources              Resource[]
+  studySessions          StudySession[]
+  calendarEvents         CalendarEvent[]
+  conversations          Conversation[]
+
+  @@index([userId, syllabusId, order])
+}
+
+model TopicPrerequisite {
+  topicId        String
+  topic          Topic   @relation("TopicDependsOn", fields: [topicId], references: [id], onDelete: Cascade)
+  prerequisiteId String
+  prerequisite   Topic   @relation("TopicRequiredBy", fields: [prerequisiteId], references: [id], onDelete: Cascade)
+  reason         String?
+
+  @@id([topicId, prerequisiteId])
+}
+
+enum SourceKind {
+  PDF
+  DOCUMENT
+  SLIDES
+  IMAGE
+  AUDIO
+  VIDEO
+  TEXT
+  LINK
+  CAPTIONS
+}
+
+enum SourceRole {
+  SYLLABUS
+  MATERIAL
+}
+
+enum SourceOrigin {
+  UPLOAD
+  PASTE
+  DISCOVERED
+  COMMUNITY
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+  NEEDS_SETUP
+}
+
+/// An uploaded or pasted source. Originals stay accessible via `fileKey`.
+model Source {
+  id               String           @id @default(cuid())
+  userId           String
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjectId        String?
+  subject          Subject?         @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  syllabusId       String?
+  syllabus         Syllabus?        @relation(fields: [syllabusId], references: [id], onDelete: SetNull)
+  role             SourceRole       @default(MATERIAL)
+  kind             SourceKind
+  origin           SourceOrigin     @default(UPLOAD)
+  title            String
+  fileKey          String?
+  fileName         String?
+  mimeType         String?
+  sizeBytes        Int?
+  url              String?
+  status           ProcessingStatus @default(PENDING)
+  progress         Int              @default(0)
+  statusMessage    String?
+  error            String?
+  pageCount        Int?
+  durationSec      Int?
+  textLength       Int?
+  extractionMethod String?
+  language         String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  chunks           SourceChunk[]
+  topicLinks       TopicSource[]
+  notes            Note[]
+
+  @@index([userId, subjectId])
+}
+
+/// Searchable passages with page numbers or timestamps for citations.
+model SourceChunk {
+  id       String  @id @default(cuid())
+  sourceId String
+  source   Source  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  userId   String
+  ordinal  Int
+  text     String
+  page     Int?
+  startSec Float?
+  endSec   Float?
+  heading  String?
+
+  @@index([sourceId, ordinal])
+  @@index([userId])
+}
+
+enum LinkMethod {
+  AI
+  KEYWORD
+  MANUAL
+}
+
+model TopicSource {
+  topicId         String
+  topic           Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  sourceId        String
+  source          Source         @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  coverage        CoverageStatus
+  score           Float          @default(0)
+  method          LinkMethod
+  matchedChunkIds String[]
+  note            String?
+  updatedAt       DateTime       @updatedAt
+
+  @@id([topicId, sourceId])
+}
+
+enum ResourceType {
+  READING
+  VIDEO
+  COURSE
+  OER_TEXTBOOK
+  PDF
+  PRACTICE
+  TOOL
+  OTHER
+}
+
+enum CostType {
+  FREE
+  FREEMIUM
+  PAID
+  UNKNOWN
+}
+
+enum Difficulty {
+  INTRO
+  STANDARD
+  ADVANCED
+}
+
+enum LinkStatus {
+  UNCHECKED
+  REACHABLE
+  UNREACHABLE
+}
+
+enum ResourceOrigin {
+  AI_WEB_SEARCH
+  DIRECTORY
+  STUDENT
+  COMMUNITY
+  MOCK
+}
+
+/// External learning resources suggested for syllabus gaps. Always verifiable by URL.
+model Resource {
+  id            String         @id @default(cuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId       String?
+  topic         Topic?         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  subjectId     String?
+  subject       Subject?       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  title         String
+  url           String
+  provider      String?
+  type          ResourceType   @default(OTHER)
+  difficulty    Difficulty?
+  cost          CostType       @default(UNKNOWN)
+  relevance     String
+  origin        ResourceOrigin
+  isSearchLink  Boolean        @default(false)
+  citedText     String?
+  linkStatus    LinkStatus     @default(UNCHECKED)
+  linkCheckedAt DateTime?
+  saved         Boolean        @default(false)
+  dismissed     Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+
+  @@index([userId, topicId])
+}
+
+// ───────────────────────────── Learning workspace ─────────────────────────────
+
+enum LessonMode {
+  SIMPLE
+  STANDARD
+  DEEP
+  EXAM
+}
+
+enum GeneratedBy {
+  AI
+  MOCK
+  RULES
+  STUDENT
+}
+
+enum Groundedness {
+  GROUNDED
+  PARTIAL
+  GENERAL_KNOWLEDGE
+}
+
+/// Detailed topic material, generated when a student opens or reaches the topic.
+model Lesson {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId      String
+  topic        Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  mode         LessonMode
+  language     String       @default("en")
+  /// {sections:[{heading, body(markdown)}], workedExamples:[], keyTerms:[], summary, diagram?}
+  content      Json
+  /// [{marker, sourceId, chunkId, page, startSec, citedText}]
+  citations    Json?
+  sourceIds    String[]
+  groundedness Groundedness
+  warnings     String[]
+  generatedBy  GeneratedBy
+  model        String?
+  createdAt    DateTime     @default(now())
+
+  @@index([topicId, mode])
+}
+
+enum NoteOrigin {
+  STUDENT
+  AI_DRAFT
+  MIXED
+}
+
+model Note {
+  id               String      @id @default(cuid())
+  userId           String
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId          String?
+  topic            Topic?      @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  subjectId        String?
+  subject          Subject?    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  sourceId         String?
+  source           Source?     @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  title            String
+  content          String
+  origin           NoteOrigin  @default(STUDENT)
+  contentUpdatedAt DateTime    @default(now())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  flashcards       Flashcard[]
+
+  @@index([userId, topicId])
+}
+
+enum CardOrigin {
+  STUDENT
+  AI
+  MOCK
+  MISTAKE
+}
+
+/// FSRS-scheduled flashcard, optionally connected to a note or a mistake.
+model Flashcard {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId       String?
+  topic         Topic?      @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  noteId        String?
+  note          Note?       @relation(fields: [noteId], references: [id], onDelete: SetNull)
+  mistakeId     String?
+  mistake       Mistake?    @relation(fields: [mistakeId], references: [id], onDelete: SetNull)
+  front         String
+  back          String
+  origin        CardOrigin
+  sourceRef     Json?
+  /// note.contentUpdatedAt when this card was made; newer note edits mark the card as possibly outdated
+  noteVersionAt DateTime?
+  due           DateTime    @default(now())
+  stability     Float       @default(0)
+  difficulty    Float       @default(0)
+  elapsedDays   Int         @default(0)
+  scheduledDays Int         @default(0)
+  learningSteps Int         @default(0)
+  reps          Int         @default(0)
+  lapses        Int         @default(0)
+  state         Int         @default(0)
+  lastReview    DateTime?
+  suspended     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  reviews       ReviewLog[]
+
+  @@index([userId, due])
+}
+
+model ReviewLog {
+  id            String    @id @default(cuid())
+  flashcardId   String
+  flashcard     Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+  userId        String
+  rating        Int
+  state         Int
+  stability     Float
+  difficulty    Float
+  scheduledDays Int
+  reviewedAt    DateTime
+  isDemo        Boolean   @default(false)
+
+  @@index([userId, reviewedAt])
+}
+
+enum PracticeMode {
+  QUICK_CHECK
+  EXAM
+  NUMERICAL
+  WRITTEN
+  TEACH_BACK
+  MIXED
+}
+
+model PracticeSet {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId     String
+  topic       Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  title       String
+  mode        PracticeMode
+  generatedBy GeneratedBy
+  model       String?
+  createdAt   DateTime     @default(now())
+  questions   Question[]
+}
+
+enum QuestionType {
+  MCQ
+  MULTI_SELECT
+  TRUE_FALSE
+  FILL_BLANK
+  SHORT_ANSWER
+  NUMERICAL
+  LONG_ANSWER
+  TEACH_BACK
+  ORDERING
+}
+
+model Question {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId       String
+  topic         Topic             @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  practiceSetId String?
+  practiceSet   PracticeSet?      @relation(fields: [practiceSetId], references: [id], onDelete: Cascade)
+  type          QuestionType
+  prompt        String
+  /// MCQ/MULTI_SELECT/ORDERING options: [{id, text}]
+  options       Json?
+  /// {correct: string[] | number | boolean, tolerance?, unit?, keyPoints?: string[], acceptable?: string[]}
+  answer        Json
+  explanation   String?
+  hints         String[]
+  marks         Int?
+  difficulty    Difficulty?
+  order         Int               @default(0)
+  generatedBy   GeneratedBy
+  sourceRefs    Json?
+  createdAt     DateTime          @default(now())
+  attempts      PracticeAttempt[]
+  mistakes      Mistake[]
+}
+
+model PracticeAttempt {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  topicId      String
+  topic        Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  response     Json
+  isCorrect    Boolean?
+  /// 0..1
+  score        Float?
+  feedback     String?
+  feedbackBy   GeneratedBy?
+  hintsUsed    Int          @default(0)
+  confidence   Int?
+  timeSpentSec Int?
+  isDemo       Boolean      @default(false)
+  attemptedAt  DateTime     @default(now())
+  mistakes     Mistake[]
+
+  @@index([userId, topicId])
+  @@index([userId, attemptedAt])
+}
+
+enum MistakeStatus {
+  OPEN
+  PRACTISING
+  RESOLVED
+}
+
+/// Personal mistake library entry connected to explanations and later practice.
+model Mistake {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId         String?
+  topic           Topic?           @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  questionId      String?
+  question        Question?        @relation(fields: [questionId], references: [id], onDelete: SetNull)
+  attemptId       String?
+  attempt         PracticeAttempt? @relation(fields: [attemptId], references: [id], onDelete: SetNull)
+  title           String
+  whatWentWrong   String
+  correctApproach String?
+  misconception   String?
+  status          MistakeStatus    @default(OPEN)
+  reviewCount     Int              @default(0)
+  nextReviewAt    DateTime?
+  resolvedAt      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  flashcards      Flashcard[]
+
+  @@index([userId, status])
+}
+
+enum RevisionKind {
+  FLASHCARDS
+  QUIZ
+  REREAD
+  TEACH_BACK
+  MISTAKES
+}
+
+enum RevisionStatus {
+  SCHEDULED
+  DONE
+  SKIPPED
+  MISSED
+}
+
+model RevisionTask {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId         String
+  topic           Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  dueAt           DateTime
+  kind            RevisionKind
+  status          RevisionStatus @default(SCHEDULED)
+  intervalDays    Int            @default(1)
+  completedAt     DateTime?
+  /// 0..1 recall measured at revision time
+  recallScore     Float?
+  calendarEventId String?        @unique
+  calendarEvent   CalendarEvent? @relation(fields: [calendarEventId], references: [id], onDelete: SetNull)
+  isDemo          Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+
+  @@index([userId, dueAt])
+}
+
+// ───────────────────────────── Study log & experiments ─────────────────────────────
+
+enum SessionKind {
+  FOCUS
+  STUDY
+  REVISION
+  PRACTICE
+  READING
+  PROJECT
+  OTHER
+}
+
+enum SessionStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  PARTIAL
+  MISSED
+}
+
+model StudySession {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId         String?
+  topic           Topic?         @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  subjectId       String?
+  subject         Subject?       @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  calendarEventId String?        @unique
+  calendarEvent   CalendarEvent? @relation(fields: [calendarEventId], references: [id], onDelete: SetNull)
+  experimentId    String?
+  experiment      Experiment?    @relation(fields: [experimentId], references: [id], onDelete: SetNull)
+  focusRoomId     String?
+  focusRoom       FocusRoom?     @relation(fields: [focusRoomId], references: [id], onDelete: SetNull)
+  kind            SessionKind    @default(STUDY)
+  status          SessionStatus  @default(PLANNED)
+  title           String?
+  plannedStart    DateTime?
+  plannedMinutes  Int?
+  actualMinutes   Int?
+  startedAt       DateTime?
+  endedAt         DateTime?
+  difficulties    String?
+  achievements    String?
+  /// optional 1..5
+  energy          Int?
+  focusQuality    Int?
+  note            String?
+  missedReason    String?
+  isDemo          Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([userId, startedAt])
+  @@index([userId, status])
+}
+
+enum ExperimentStatus {
+  PROPOSED
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
+
+enum ExperimentVerdict {
+  HELPED
+  NO_CHANGE
+  WORSE
+  UNSURE
+}
+
+model Experiment {
+  id          String             @id @default(cuid())
+  userId      String
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  hypothesis  String
+  change      String
+  metric      String
+  startAt     DateTime?
+  endAt       DateTime?
+  status      ExperimentStatus   @default(PROPOSED)
+  baseline    Json?
+  result      Json?
+  verdict     ExperimentVerdict?
+  reflection  String?
+  suggestedBy GeneratedBy        @default(STUDENT)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  sessions    StudySession[]
+}
+
+// ───────────────────────────── Calendar & reminders ─────────────────────────────
+
+enum EventKind {
+  CLASS
+  ASSIGNMENT
+  EXAM
+  REVISION
+  STUDY
+  PROJECT
+  FOCUS
+  APPLICATION
+  PERSONAL
+  REMINDER
+}
+
+enum EventStatus {
+  CONFIRMED
+  TENTATIVE
+  CANCELLED
+  DONE
+}
+
+enum EventSource {
+  LOCAL
+  PLANNER
+  GOOGLE
+}
+
+enum SyncState {
+  LOCAL_ONLY
+  PENDING_PUSH
+  SYNCED
+  CONFLICT
+  PENDING_DELETE
+}
+
+model CalendarEvent {
+  id                String           @id @default(cuid())
+  userId            String
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  description       String?
+  kind              EventKind
+  status            EventStatus      @default(CONFIRMED)
+  startAt           DateTime
+  endAt             DateTime
+  allDay            Boolean          @default(false)
+  timezone          String           @default("Asia/Kolkata")
+  location          String?
+  /// RFC 5545 RRULE without the "RRULE:" prefix
+  rrule             String?
+  topicId           String?
+  topic             Topic?           @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  subjectId         String?
+  subject           Subject?         @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  goalId            String?
+  goal              Goal?            @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  applicationId     String?
+  application       Application?     @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  estimatedMinutes  Int?
+  isDeadline        Boolean          @default(false)
+  showCountdown     Boolean          @default(false)
+  reminderMinutes   Int[]
+  source            EventSource      @default(LOCAL)
+  externalId        String?
+  externalEtag      String?
+  externalUpdatedAt DateTime?
+  syncState         SyncState        @default(LOCAL_ONLY)
+  lastSyncedAt      DateTime?
+  isDemo            Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  revisionTask      RevisionTask?
+  studySession      StudySession?
+  milestones        Milestone[]
+  changes           CalendarChange[]
+
+  @@unique([userId, source, externalId])
+  @@index([userId, startAt])
+}
+
+enum ConnectionStatus {
+  ACTIVE
+  ERROR
+  REVOKED
+}
+
+/// Google Calendar link. Tokens are encrypted at rest (AES-256-GCM, server-side key).
+model CalendarConnection {
+  id              String           @id @default(cuid())
+  userId          String           @unique
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider        String           @default("google")
+  accountEmail    String?
+  grantedScopes   String[]
+  accessTokenEnc  String?
+  refreshTokenEnc String?
+  tokenExpiresAt  DateTime?
+  studyCalendarId String?
+  readBusy        Boolean          @default(false)
+  importEvents    Boolean          @default(false)
+  syncToken       String?
+  lastSyncedAt    DateTime?
+  status          ConnectionStatus @default(ACTIVE)
+  lastError       String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  changes         CalendarChange[]
+}
+
+enum ChangeDirection {
+  PUSH
+  PULL
+}
+
+enum ChangeOp {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum ChangeStatus {
+  PENDING
+  APPLIED
+  REJECTED
+  FAILED
+  CONFLICT
+}
+
+/// External calendar changes are previewed here and applied only after confirmation.
+model CalendarChange {
+  id             String             @id @default(cuid())
+  userId         String
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connectionId   String
+  connection     CalendarConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  eventId        String?
+  event          CalendarEvent?     @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  direction      ChangeDirection
+  op             ChangeOp
+  summary        String
+  payload        Json
+  status         ChangeStatus       @default(PENDING)
+  conflictDetail Json?
+  error          String?
+  createdAt      DateTime           @default(now())
+  resolvedAt     DateTime?
+
+  @@index([userId, status])
+}
+
+/// Cached free/busy blocks from external calendars (no event details stored).
+model BusyBlock {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startAt   DateTime
+  endAt     DateTime
+  source    String
+  fetchedAt DateTime @default(now())
+
+  @@index([userId, startAt])
+}
+
+enum NotificationKind {
+  REMINDER
+  REVISION_DUE
+  DEADLINE
+  CHECK_IN
+  WEEKLY_REVIEW
+  RESTART
+  COMMUNITY
+  SYSTEM
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind        NotificationKind
+  title       String
+  body        String?
+  link        String?
+  dueAt       DateTime
+  deliveredAt DateTime?
+  readAt      DateTime?
+  dedupeKey   String?
+  createdAt   DateTime         @default(now())
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, dueAt])
+}
+
+// ───────────────────────────── Journal ─────────────────────────────
+
+enum JournalKind {
+  CHECK_IN
+  REFLECTION
+  NOTE
+  VOICE
+}
+
+/// Private. Never shared to community. AI may read it only when `aiAccess` is true
+/// AND PrivacySettings.aiUseJournal is true.
+model JournalEntry {
+  id              String       @id @default(cuid())
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// local calendar date of the entry
+  date            DateTime     @db.Date
+  kind            JournalKind
+  title           String?
+  text            String?
+  mood            Int?
+  energy          Int?
+  plannedSummary  String?
+  actualSummary   String?
+  topicsStudied   String[]
+  difficulties    String?
+  achievements    String?
+  voiceFileKey    String?
+  voiceTranscript String?
+  photoFileKeys   String[]
+  aiAccess        Boolean      @default(false)
+  isDemo          Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  memories        MemoryItem[]
+
+  @@index([userId, date])
+}
+
+model WeeklyReview {
+  id           String      @id @default(cuid())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekStart    DateTime    @db.Date
+  /// {highlights, patterns, difficulties, suggestions, stats}
+  summary      Json
+  usedEntryIds String[]
+  generatedBy  GeneratedBy
+  model        String?
+  createdAt    DateTime    @default(now())
+
+  @@unique([userId, weekStart])
+}
+
+// ───────────────────────────── Goals & career ─────────────────────────────
+
+enum GoalHorizon {
+  SHORT
+  LONG
+}
+
+enum GoalStatus {
+  ACTIVE
+  ACHIEVED
+  PAUSED
+  DROPPED
+}
+
+enum GoalCategory {
+  ACADEMIC
+  EXAM
+  SKILL
+  CAREER
+  PROJECT
+  PERSONAL
+  WELLBEING
+}
+
+enum GoalOrigin {
+  STUDENT
+  GAP_ANALYSIS
+  SUGGESTION
+}
+
+model Goal {
+  id                String            @id @default(cuid())
+  userId            String
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  description       String?
+  whyItMatters      String?
+  horizon           GoalHorizon       @default(SHORT)
+  category          GoalCategory      @default(ACADEMIC)
+  status            GoalStatus        @default(ACTIVE)
+  targetDate        DateTime?
+  isCurrentPriority Boolean           @default(false)
+  origin            GoalOrigin        @default(STUDENT)
+  requirementId     String?           @unique
+  requirement       RequirementCheck? @relation(fields: [requirementId], references: [id], onDelete: SetNull)
+  achievedAt        DateTime?
+  isDemo            Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  milestones        Milestone[]
+  calendarEvents    CalendarEvent[]
+
+  @@index([userId, status])
+}
+
+model Milestone {
+  id              String         @id @default(cuid())
+  goalId          String
+  goal            Goal           @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  userId          String
+  title           String
+  dueAt           DateTime?
+  completedAt     DateTime?
+  order           Int            @default(0)
+  calendarEventId String?
+  calendarEvent   CalendarEvent? @relation(fields: [calendarEventId], references: [id], onDelete: SetNull)
+
+  @@index([goalId, order])
+}
+
+enum InterestStatus {
+  SELECTED
+  EXPLORING
+  DROPPED
+}
+
+model CareerInterest {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  domain    String
+  roles     String[]
+  companies String[]
+  cities    String[]
+  workModes String[]
+  status    InterestStatus @default(EXPLORING)
+  notes     String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([userId])
+}
+
+enum ReviewKind {
+  DISCOVERY
+  PRELIMINARY
+}
+
+/// Evidence-based career discovery review (full after ~3 months of engagement; preliminary before).
+model CareerReview {
+  id              String               @id @default(cuid())
+  userId          String
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind            ReviewKind
+  engagementDays  Int
+  spanDays        Int
+  /// snapshot of evidence used: interests, completed work, skills, reflections (permitted only)
+  evidence        Json
+  /// [{title, whyItFits, evidence[], uncertainties[], explorationProject{title, steps[]}}]
+  suggestions     Json
+  limitations     String[]
+  generatedBy     GeneratedBy
+  model           String?
+  studentFeedback String?
+  createdAt       DateTime             @default(now())
+  explorations    ExplorationProject[]
+}
+
+enum ExplorationKind {
+  MINI_PROJECT
+  SIMULATION
+  INFORMATIONAL_INTERVIEW
+  READING
+  SHADOWING
+  COURSE
+}
+
+enum ExplorationStatus {
+  PROPOSED
+  ACTIVE
+  COMPLETED
+  DROPPED
+}
+
+/// Small exploration projects. Simulations are explicitly learning activities, not real work experience.
+model ExplorationProject {
+  id             String            @id @default(cuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  careerReviewId String?
+  careerReview   CareerReview?     @relation(fields: [careerReviewId], references: [id], onDelete: SetNull)
+  title          String
+  description    String
+  domain         String?
+  kind           ExplorationKind
+  steps          String[]
+  status         ExplorationStatus @default(PROPOSED)
+  reflection     String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+// ───────────────────────────── Opportunities & applications ─────────────────────────────
+
+enum OpportunityKind {
+  INTERNSHIP
+  PROGRAMME
+  COMPETITION
+  SCHOLARSHIP
+  RESEARCH
+  FELLOWSHIP
+  HACKATHON
+  JOB
+  OTHER
+}
+
+enum WorkMode {
+  REMOTE
+  ONSITE
+  HYBRID
+  UNKNOWN
+}
+
+enum OpportunitySourceType {
+  MANUAL
+  DIRECTORY
+  FEED
+}
+
+enum VerificationStatus {
+  SOURCE_LINKED
+  UNVERIFIED
+  LINK_BROKEN
+  EXPIRED
+}
+
+/// Directory/feed entries are shared (ownerId null). Manually saved links are private to their owner.
+model Opportunity {
+  id                    String                @id @default(cuid())
+  ownerId               String?
+  owner                 User?                 @relation("OpportunityOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  sourceType            OpportunitySourceType
+  sourceName            String
+  sourceUrl             String
+  applyUrl              String?
+  title                 String
+  organisation          String
+  kind                  OpportunityKind
+  description           String?
+  eligibility           String?
+  educationRequirements String?
+  location              String?
+  workMode              WorkMode              @default(UNKNOWN)
+  duration              String?
+  compensation          String?
+  deadline              DateTime?
+  deadlineText          String?
+  isRecurring           Boolean               @default(false)
+  requirements          String[]
+  domains               String[]
+  tags                  String[]
+  lastCheckedAt         DateTime?
+  linkStatus            LinkStatus            @default(UNCHECKED)
+  verification          VerificationStatus    @default(UNVERIFIED)
+  feedId                String?
+  externalId            String?
+  isDemo                Boolean               @default(false)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  applications          Application[]
+
+  @@unique([feedId, externalId])
+  @@index([ownerId])
+}
+
+model OpportunityFeed {
+  id            String    @id @default(cuid())
+  name          String
+  url           String    @unique
+  format        String
+  permittedNote String
+  enabled       Boolean   @default(true)
+  lastFetchedAt DateTime?
+  lastError     String?
+  createdAt     DateTime  @default(now())
+}
+
+enum ApplicationStatus {
+  SAVED
+  PREPARING
+  APPLIED
+  INTERVIEWING
+  OFFER
+  REJECTED
+  WITHDRAWN
+}
+
+model Application {
+  id                String              @id @default(cuid())
+  userId            String
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunityId     String
+  opportunity       Opportunity         @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  status            ApplicationStatus   @default(SAVED)
+  notes             String?
+  appliedAt         DateTime?
+  nextStep          String?
+  nextStepAt        DateTime?
+  cvId              String?
+  cv                Cv?                 @relation(fields: [cvId], references: [id], onDelete: SetNull)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  requirements      RequirementCheck[]
+  calendarEvents    CalendarEvent[]
+  interviewPractice InterviewPractice[]
+
+  @@unique([userId, opportunityId])
+}
+
+enum RequirementState {
+  MET
+  GAP
+  UNKNOWN
+}
+
+/// One published requirement compared against the student's actual evidence.
+model RequirementCheck {
+  id             String           @id @default(cuid())
+  userId         String
+  applicationId  String
+  application    Application      @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  requirement    String
+  state          RequirementState @default(UNKNOWN)
+  explanation    String?
+  achievementIds String[]
+  decidedBy      GeneratedBy
+  updatedAt      DateTime         @updatedAt
+  goal           Goal?
+
+  @@index([applicationId])
+}
+
+model InterviewPractice {
+  id            String       @id @default(cuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId String?
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  achievementId String?
+  question      String
+  answer        String?
+  feedback      String?
+  feedbackBy    GeneratedBy?
+  createdAt     DateTime     @default(now())
+}
+
+// ───────────────────────────── Portfolio & CV ─────────────────────────────
+
+enum AchievementKind {
+  PROJECT
+  COURSEWORK
+  CERTIFICATE
+  VOLUNTEERING
+  COMPETITION
+  RESPONSIBILITY
+  AWARD
+  INTERNSHIP
+  RESEARCH
+  EXTRACURRICULAR
+  OTHER
+}
+
+/// Only student-approved achievements appear in CVs. Skills here are *demonstrated*, not just studied.
+model Achievement {
+  id                 String          @id @default(cuid())
+  userId             String
+  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind               AchievementKind
+  title              String
+  organisation       String?
+  role               String?
+  startDate          DateTime?
+  endDate            DateTime?
+  description        String
+  outcomes           String?
+  skillsDemonstrated String[]
+  subjectsRelated    String[]
+  evidenceLinks      String[]
+  evidenceFileKeys   String[]
+  approved           Boolean         @default(false)
+  approvedAt         DateTime?
+  isDemo             Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  @@index([userId])
+}
+
+model EducationRecord {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  qualification String
+  institution   String
+  board         String?
+  startYear     Int?
+  endYear       Int?
+  current       Boolean  @default(false)
+  /// as stated by the student, e.g. "92%" or "CGPA 8.4"
+  result        String?
+  createdAt     DateTime @default(now())
+}
+
+model Cv {
+  id                  String        @id @default(cuid())
+  userId              String
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title               String
+  targetOpportunityId String?
+  headline            String?
+  summary             String?
+  contactLine         String?
+  /// {achievementIds: string[], educationIds: string[], skills: string[], sectionOrder: string[]}
+  sections            Json
+  tailoringNotes      String[]
+  lastExportedAt      DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  applications        Application[]
+}
+
+// ───────────────────────────── XP & growth ─────────────────────────────
+
+enum XpAction {
+  STUDY_SESSION
+  PRACTICE_ATTEMPT
+  UNDERSTANDING_CHECK
+  REVISION_COMPLETE
+  FLASHCARD_REVIEW
+  MISTAKE_REVIEW
+  PROJECT_PROGRESS
+  ACHIEVEMENT_ADDED
+  PEER_HELP
+  CHECK_IN
+  REFLECTION
+  RETURN_AFTER_BREAK
+  MILESTONE
+  EXPERIMENT
+  SYLLABUS_CONFIRMED
+}
+
+/// XP ledger. (userId, dedupeKey) is unique, so repeating an action never re-awards XP.
+model XpEvent {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action     XpAction
+  points     Int
+  dedupeKey  String
+  reason     String
+  sourceType String?
+  sourceId   String?
+  /// local calendar day the activity counts towards
+  occurredOn DateTime @db.Date
+  isDemo     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, occurredOn])
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeCode String
+  context   Json?
+  awardedAt DateTime @default(now())
+
+  @@unique([userId, badgeCode])
+}
+
+// ───────────────────────────── Community ─────────────────────────────
+
+/// Pseudonymous public identity, separate from the private profile.
+model CommunityProfile {
+  userId         String    @id
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  handle         String    @unique
+  bio            String?
+  isModerator    Boolean   @default(false)
+  suspendedUntil DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+enum GroupKind {
+  SUBJECT
+  COURSE
+  EXAM
+  PROJECT
+  CAREER
+  GENERAL
+}
+
+/// ALL_AGES spaces are strictly moderated; TEENS is for 13–17; ADULTS for 18+.
+enum GroupAudience {
+  ALL_AGES
+  TEENS
+  ADULTS
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  kind        GroupKind
+  description String
+  audience    GroupAudience @default(ALL_AGES)
+  rules       String?
+  isOfficial  Boolean       @default(false)
+  createdById String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  members     GroupMember[]
+  posts       Post[]
+  focusRooms  FocusRoom[]
+}
+
+enum GroupRole {
+  MEMBER
+  MODERATOR
+  OWNER
+}
+
+model GroupMember {
+  groupId  String
+  group    Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role     GroupRole @default(MEMBER)
+  joinedAt DateTime  @default(now())
+
+  @@id([groupId, userId])
+  @@index([userId])
+}
+
+enum PostKind {
+  QUESTION
+  RESOURCE
+  EXPLANATION
+  GOAL
+  ACHIEVEMENT
+  SHOWCASE
+  DISCUSSION
+}
+
+enum ContentStatus {
+  VISIBLE
+  PENDING_REVIEW
+  REMOVED
+}
+
+model Post {
+  id                 String        @id @default(cuid())
+  groupId            String
+  group              Group         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  authorId           String
+  author             User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  kind               PostKind
+  title              String
+  body               String
+  resourceUrl        String?
+  /// where the content comes from, e.g. "My own notes" or "NCERT Physics Part 1, Ch. 4"
+  attribution        String?
+  sharedFromType     String?
+  sharedFromId       String?
+  status             ContentStatus @default(VISIBLE)
+  incorrectFlagCount Int           @default(0)
+  reportCount        Int           @default(0)
+  helpfulCount       Int           @default(0)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  comments           Comment[]
+  reactions          Reaction[]
+
+  @@index([groupId, createdAt])
+}
+
+model Comment {
+  id            String        @id @default(cuid())
+  postId        String
+  post          Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId      String
+  author        User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  body          String
+  isExplanation Boolean       @default(false)
+  attribution   String?
+  status        ContentStatus @default(VISIBLE)
+  helpfulCount  Int           @default(0)
+  reportCount   Int           @default(0)
+  createdAt     DateTime      @default(now())
+  reactions     Reaction[]
+
+  @@index([postId, createdAt])
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  type      String   @default("HELPFUL")
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId, type])
+  @@unique([userId, commentId, type])
+}
+
+enum FlagTarget {
+  POST
+  COMMENT
+  USER
+  RESOURCE
+}
+
+enum FlagReason {
+  SPAM
+  HARASSMENT
+  INCORRECT
+  INAPPROPRIATE
+  SELF_HARM
+  PRIVACY
+  OTHER
+}
+
+enum FlagStatus {
+  OPEN
+  ACTIONED
+  DISMISSED
+}
+
+model ContentFlag {
+  id             String     @id @default(cuid())
+  reporterId     String
+  reporter       User       @relation("FlagReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType     FlagTarget
+  targetId       String
+  reason         FlagReason
+  details        String?
+  status         FlagStatus @default(OPEN)
+  reviewedById   String?
+  reviewedAt     DateTime?
+  resolutionNote String?
+  createdAt      DateTime   @default(now())
+
+  @@unique([reporterId, targetType, targetId, reason])
+  @@index([status, createdAt])
+}
+
+model Block {
+  blockerId String
+  blocker   User     @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String
+  blocked   User     @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([blockerId, blockedId])
+}
+
+enum RoomStatus {
+  SCHEDULED
+  LIVE
+  ENDED
+}
+
+/// Shared focus sessions: presence only (no chat, no camera) to keep them low-risk and low-bandwidth.
+model FocusRoom {
+  id              String             @id @default(cuid())
+  hostId          String
+  host            User               @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  groupId         String?
+  group           Group?             @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  title           String
+  startsAt        DateTime
+  durationMinutes Int
+  audience        GroupAudience      @default(ALL_AGES)
+  status          RoomStatus         @default(SCHEDULED)
+  createdAt       DateTime           @default(now())
+  participants    FocusParticipant[]
+  studySessions   StudySession[]
+}
+
+model FocusParticipant {
+  roomId     String
+  room       FocusRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goalText   String?
+  joinedAt   DateTime  @default(now())
+  lastSeenAt DateTime  @default(now())
+  leftAt     DateTime?
+
+  @@id([roomId, userId])
+}
+
+enum BuddyStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELLED
+}
+
+model StudyBuddyRequest {
+  id          String      @id @default(cuid())
+  requesterId String
+  requester   User        @relation("BuddyRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  recipientId String
+  recipient   User        @relation("BuddyRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  message     String?
+  status      BuddyStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  respondedAt DateTime?
+
+  @@unique([requesterId, recipientId])
+}
+
+// ───────────────────────────── Companion ─────────────────────────────
+
+enum ConversationContext {
+  GENERAL
+  TOPIC
+  PLANNING
+  REFLECTION
+  CAREER
+  RESTART
+}
+
+model Conversation {
+  id        String              @id @default(cuid())
+  userId    String
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  context   ConversationContext @default(GENERAL)
+  topicId   String?
+  topic     Topic?              @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  messages  Message[]
+  memories  MemoryItem[]
+
+  @@index([userId, updatedAt])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  role           MessageRole
+  content        String
+  /// data categories used to answer, shown to the student ("why am I seeing this")
+  contextUsed    String[]
+  citations      Json?
+  generatedBy    GeneratedBy?
+  model          String?
+  inputTokens    Int?
+  outputTokens   Int?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+enum ActionOrigin {
+  COMPANION
+  JOURNAL
+  WEEKLY_REVIEW
+  PLANNER
+  GAP_ANALYSIS
+  RESTART
+  SYSTEM
+}
+
+enum ActionStatus {
+  PROPOSED
+  ACCEPTED
+  DISMISSED
+  EXPIRED
+}
+
+/// Actionable suggestions from any part of the app. Nothing runs until the student accepts.
+model SuggestedAction {
+  id         String       @id @default(cuid())
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  origin     ActionOrigin
+  sourceId   String?
+  title      String
+  reason     String
+  actionType String
+  payload    Json
+  status     ActionStatus @default(PROPOSED)
+  createdAt  DateTime     @default(now())
+  resolvedAt DateTime?
+
+  @@index([userId, status])
+}
+
+// ───────────────────────────── Platform ─────────────────────────────
+
+model AiUsage {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  day          DateTime @db.Date
+  feature      String
+  requests     Int      @default(0)
+  inputTokens  Int      @default(0)
+  outputTokens Int      @default(0)
+
+  @@unique([userId, day, feature])
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+/// Postgres-backed background job queue (claimed with FOR UPDATE SKIP LOCKED).
+model Job {
+  id          String    @id @default(cuid())
+  type        String
+  payload     Json
+  status      JobStatus @default(QUEUED)
+  userId      String?
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  runAt       DateTime  @default(now())
+  lockedAt    DateTime?
+  lockedBy    String?
+  progress    Int       @default(0)
+  message     String?
+  lastError   String?
+  result      Json?
+  dedupeKey   String?   @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  finishedAt  DateTime?
+
+  @@index([status, runAt])
+  @@index([userId])
+}
+
+enum FilePurpose {
+  SOURCE
+  JOURNAL_PHOTO
+  JOURNAL_VOICE
+  EVIDENCE
+}
+
+/// Registry of private files; every download checks ownership.
+model StoredFile {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key       String      @unique
+  fileName  String
+  mimeType  String
+  sizeBytes Int
+  purpose   FilePurpose
+  createdAt DateTime    @default(now())
+}
+
+/// Explicit per-user test clock. Only honoured when ENABLE_TEST_CLOCK=true (never in production).
+model TestClock {
+  userId       String   @id
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  simulatedNow DateTime
+  updatedAt    DateTime @updatedAt
+}
+
+/// Liveness of background processes (shown on Settings → Integrations).
+model SystemHeartbeat {
+  name       String   @id
+  lastSeenAt DateTime
+  info       Json?
+}
