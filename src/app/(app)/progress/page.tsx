@@ -61,7 +61,7 @@ export default async function ProgressPage() {
             ))}
           </ul>
         ) : (
-          <p className="mb-4 text-sm text-muted">Kadam only claims improvement when there’s enough practice and revision data to compare. Keep going and trends will appear here.</p>
+          <p className="mb-4 text-sm text-muted">NextChapter only claims improvement when there’s enough practice and revision data to compare. Keep going and trends will appear here.</p>
         )}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <ColumnChart title="Study time per week" unit="minutes" valueLabel="Studied" targetLabel="Planned" data={p.series.map((w) => ({ label: weekLabel(w.weekKey), value: w.actualMinutes, target: w.plannedMinutes || null }))} />

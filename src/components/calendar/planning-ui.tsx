@@ -93,7 +93,7 @@ export function FocusTimer({ elapsedAtRender, plannedMinutes }: { elapsedAtRende
 export function FinishSessionForm({ sessionId, hasTopic, defaultMinutes }: { sessionId: string; hasTopic: boolean; defaultMinutes: number }) {
   return (
     <ActionForm action={finishSessionAction.bind(null, sessionId)} className="flex flex-col gap-3">
-      <Field label="Minutes you actually studied" htmlFor="actualMinutes" hint="Honest numbers make your plans fit better — Kadam learns your pace from them.">
+      <Field label="Minutes you actually studied" htmlFor="actualMinutes" hint="Honest numbers make your plans fit better — NextChapter learns your pace from them.">
         <Input
           id="actualMinutes"
           name="actualMinutes"
@@ -256,7 +256,7 @@ export function ObstacleForm({ actionId, part, reasons, parts }: { actionId: str
       <Field label="Anything else? (optional)" htmlFor={`note-${actionId}`}>
         <Input id={`note-${actionId}`} name="note" maxLength={300} />
       </Field>
-      <p className="text-xs text-muted">Your answer is saved to what Kadam remembers (you can edit or delete it in Settings → Memory).</p>
+      <p className="text-xs text-muted">Your answer is saved to what NextChapter remembers (you can edit or delete it in Settings → Memory).</p>
       <SubmitButton size="sm" className="self-start">
         Adjust my plan
       </SubmitButton>
@@ -297,8 +297,8 @@ export function ConflictButtons({ id }: { id: string }) {
   const [pending, start] = useTransition();
   return (
     <div className="flex flex-wrap gap-2">
-      <Button size="sm" variant="outline" disabled={pending} onClick={() => start(async () => toastResult(await resolveConflictAction(id, "kadam")))}>
-        Keep Kadam’s version
+      <Button size="sm" variant="outline" disabled={pending} onClick={() => start(async () => toastResult(await resolveConflictAction(id, "app")))}>
+        Keep NextChapter’s version
       </Button>
       <Button size="sm" variant="outline" disabled={pending} onClick={() => start(async () => toastResult(await resolveConflictAction(id, "google")))}>
         Keep Google’s version
@@ -330,14 +330,14 @@ export function DisconnectForm() {
   const [pending, start] = useTransition();
   return (
     <div className="flex flex-col gap-2">
-      <Checkbox label="Also delete the “Kadam — study plan” calendar from my Google account" checked={deleteCalendar} onChange={(e) => setDeleteCalendar(e.target.checked)} />
+      <Checkbox label="Also delete the “NextChapter — study plan” calendar from my Google account" checked={deleteCalendar} onChange={(e) => setDeleteCalendar(e.target.checked)} />
       <Button
         size="sm"
         variant="outline"
         className="self-start text-danger"
         disabled={pending}
         onClick={() => {
-          if (confirm("Disconnect Google Calendar? Kadam will stop syncing and forget its access.")) start(() => disconnectGoogleAction(deleteCalendar));
+          if (confirm("Disconnect Google Calendar? NextChapter will stop syncing and forget its access.")) start(() => disconnectGoogleAction(deleteCalendar));
         }}
       >
         Disconnect Google Calendar

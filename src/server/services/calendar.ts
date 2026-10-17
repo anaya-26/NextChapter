@@ -330,15 +330,15 @@ function icsLocal(d: Date, tz: string) {
   return `${localDateKey(d, tz).replace(/-/g, "")}T${formatHm(Math.round((d.getTime() - zonedToUtc(localDateKey(d, tz), "00:00", tz).getTime()) / 60000)).replace(":", "")}00`;
 }
 
-/** The student's Kadam calendar as an .ics file (works with any calendar app, no account link needed). */
+/** The student's NextChapter calendar as an .ics file (works with any calendar app, no account link needed). */
 export async function exportIcs(userId: string, at: Date) {
   const events = await prisma.calendarEvent.findMany({
     where: { userId, status: { not: "CANCELLED" }, OR: [{ endAt: { gte: new Date(at.getTime() - 30 * 86400000) } }, { rrule: { not: null } }] },
     orderBy: { startAt: "asc" },
   });
-  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Kadam//Student Companion//EN", "CALSCALE:GREGORIAN", "X-WR-CALNAME:Kadam study plan"];
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//NextChapter//Student Companion//EN", "CALSCALE:GREGORIAN", "X-WR-CALNAME:NextChapter study plan"];
   for (const e of events) {
-    lines.push("BEGIN:VEVENT", `UID:${e.id}@kadam`, `DTSTAMP:${icsUtc(e.updatedAt)}`);
+    lines.push("BEGIN:VEVENT", `UID:${e.id}@nextchapter`, `DTSTAMP:${icsUtc(e.updatedAt)}`);
     if (e.allDay) {
       lines.push(`DTSTART;VALUE=DATE:${localDateKey(e.startAt, e.timezone).replace(/-/g, "")}`, `DTEND;VALUE=DATE:${localDateKey(e.endAt, e.timezone).replace(/-/g, "")}`);
     } else if (e.rrule) {

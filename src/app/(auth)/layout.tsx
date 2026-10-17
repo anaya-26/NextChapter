@@ -5,7 +5,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6">
-        <Link href="/" aria-label="Kadam home">
+        <Link href="/" aria-label="NextChapter home">
           <Logo />
         </Link>
       </header>

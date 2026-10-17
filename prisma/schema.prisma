@@ -1,4 +1,4 @@
-// Kadam — connected data model.
+// NextChapter — connected data model.
 //
 // Conventions
 // - Every student-owned row carries `userId`; the data-access layer (src/server/dal)
@@ -1154,7 +1154,7 @@ model CalendarConnection {
   refreshTokenEnc String?
   tokenExpiresAt  DateTime?
   studyCalendarId String?
-  /// Kinds of Kadam events offered for copying to the Kadam calendar in Google
+  /// Kinds of NextChapter events offered for copying to the NextChapter calendar in Google
   syncKinds       EventKind[]      @default([REVISION, STUDY, EXAM, ASSIGNMENT])
   readBusy        Boolean          @default(false)
   importEvents    Boolean          @default(false)

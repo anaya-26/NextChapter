@@ -49,7 +49,7 @@ export default async function CommunityProfilePage() {
         </Card>
         <Card className="p-5">
           <SectionTitle>Leave the community</SectionTitle>
-          <p className="mb-3 text-sm text-muted">Deletes your posts, replies, groups, buddies and handle. Your private work in Kadam stays.</p>
+          <p className="mb-3 text-sm text-muted">Deletes your posts, replies, groups, buddies and handle. Your private work in NextChapter stays.</p>
           <LeaveCommunityButton />
         </Card>
       </div>

@@ -63,7 +63,7 @@ export async function safeFetch(rawUrl: string, opts: SafeFetchOptions = {}): Pr
       method,
       redirect: "manual",
       signal: AbortSignal.timeout(timeoutMs),
-      headers: { "user-agent": "KadamLinkCheck/1.0 (+student companion; link checks only)", ...(accept ? { accept } : {}) },
+      headers: { "user-agent": "NextChapterLinkCheck/1.0 (+student companion; link checks only)", ...(accept ? { accept } : {}) },
     });
     if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
       url = new URL(res.headers.get("location")!, url);

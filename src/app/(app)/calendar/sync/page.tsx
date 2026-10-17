@@ -19,7 +19,7 @@ const ERRORS: Record<string, string> = {
   denied: "You didn't give permission, so nothing was connected.",
   state: "The connection request expired or didn't match — please try again.",
   failed: "Google didn't complete the connection. Please try again.",
-  scope: "Kadam needs permission to manage its own study calendar. Please try again and allow it.",
+  scope: "NextChapter needs permission to manage its own study calendar. Please try again and allow it.",
 };
 
 type ConflictSide = { title?: string | null; startAt?: string | null; endAt?: string | null } | null;
@@ -45,17 +45,17 @@ export default async function SyncPage(props: PageProps<"/calendar/sync">) {
           </Link>
         }
         title="Google Calendar"
-        description="Optional. Kadam’s own calendar works fully without it."
+        description="Optional. NextChapter’s own calendar works fully without it."
       />
       {typeof sp.error === "string" ? <Notice tone="danger">{ERRORS[sp.error] ?? ERRORS.failed}</Notice> : null}
       {sp.connected ? <Notice tone="success" title="Connected">Review the changes below — nothing is copied to Google until you approve it.</Notice> : null}
-      {sp.disconnected ? <Notice tone="success">Disconnected. Kadam no longer has access to your Google account.</Notice> : null}
+      {sp.disconnected ? <Notice tone="success">Disconnected. NextChapter no longer has access to your Google account.</Notice> : null}
 
       <Card className="p-4 sm:p-5">
-        <SectionTitle>What Kadam can and can’t see</SectionTitle>
+        <SectionTitle>What NextChapter can and can’t see</SectionTitle>
         <ul className="flex flex-col gap-2 text-sm">
           <li className="flex gap-2">
-            <Check className="mt-0.5 size-4 shrink-0 text-success" aria-hidden /> Create one separate calendar, “Kadam — study plan”, and add or change events in it — only after you approve each change.
+            <Check className="mt-0.5 size-4 shrink-0 text-success" aria-hidden /> Create one separate calendar, “NextChapter — study plan”, and add or change events in it — only after you approve each change.
           </li>
           <li className="flex gap-2">
             <Eye className="mt-0.5 size-4 shrink-0 text-success" aria-hidden /> See when you’re busy in your main calendar, so plans avoid those times.
@@ -79,7 +79,7 @@ export default async function SyncPage(props: PageProps<"/calendar/sync">) {
         </Notice>
       ) : !conn ? (
         <Card className="flex flex-col items-start gap-3 p-4 sm:p-5">
-          <p className="text-sm">Connect to see your Kadam plan in Google Calendar on your phone, and to keep study sessions away from your other plans.</p>
+          <p className="text-sm">Connect to see your NextChapter plan in Google Calendar on your phone, and to keep study sessions away from your other plans.</p>
           <a href="/api/integrations/google-calendar/connect" className={buttonVariants()}>
             Connect Google Calendar
           </a>
@@ -89,7 +89,7 @@ export default async function SyncPage(props: PageProps<"/calendar/sync">) {
           <Card className="flex flex-col gap-3 p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <p className="font-semibold">Connected · “Kadam — study plan”</p>
+                <p className="font-semibold">Connected · “NextChapter — study plan”</p>
                 <p className="text-sm text-muted">
                   {conn.lastSyncedAt ? `Last checked ${fmt(conn.lastSyncedAt.toISOString())}` : "Not checked yet"} · Busy times {conn.readBusy ? "on" : "not permitted"}
                 </p>
@@ -105,7 +105,7 @@ export default async function SyncPage(props: PageProps<"/calendar/sync">) {
               <ul className="divide-y divide-border rounded-lg border border-border">
                 {pending.map((c) => (
                   <li key={c.id} className="flex flex-wrap items-center gap-2 p-3 text-sm">
-                    <Badge tone={c.direction === "PUSH" ? "primary" : "info"}>{c.direction === "PUSH" ? "Kadam → Google" : "Google → Kadam"}</Badge>
+                    <Badge tone={c.direction === "PUSH" ? "primary" : "info"}>{c.direction === "PUSH" ? "NextChapter → Google" : "Google → NextChapter"}</Badge>
                     <span className="min-w-0 flex-1">{c.summary}</span>
                     <ApproveButton ids={[c.id]} label="Apply" />
                     <RejectButton id={c.id} />
@@ -121,15 +121,15 @@ export default async function SyncPage(props: PageProps<"/calendar/sync">) {
             <Card className="flex flex-col gap-3 p-4 sm:p-5">
               <SectionTitle>Conflicts</SectionTitle>
               {conflicts.map((c) => {
-                const detail = (c.conflictDetail ?? {}) as { kadam?: ConflictSide; google?: ConflictSide };
+                const detail = (c.conflictDetail ?? {}) as { app?: ConflictSide; google?: ConflictSide };
                 return (
                   <div key={c.id} className="flex flex-col gap-2 rounded-lg border border-warning/40 p-3 text-sm">
                     <p className="font-medium">{c.summary}</p>
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       <div className="rounded-lg bg-surface-2 p-2">
-                        <p className="text-xs font-semibold uppercase text-muted">In Kadam</p>
-                        <p>{detail.kadam?.title}</p>
-                        <p className="text-muted">{fmt(detail.kadam?.startAt)}</p>
+                        <p className="text-xs font-semibold uppercase text-muted">In NextChapter</p>
+                        <p>{detail.app?.title}</p>
+                        <p className="text-muted">{fmt(detail.app?.startAt)}</p>
                       </div>
                       <div className="rounded-lg bg-surface-2 p-2">
                         <p className="text-xs font-semibold uppercase text-muted">In Google</p>

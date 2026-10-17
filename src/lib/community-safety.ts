@@ -21,7 +21,7 @@ export const HANDLE_RULES = "3–20 letters, numbers or underscores. Don’t use
 export function handleProblem(handle: string): string | null {
   if (!/^[A-Za-z0-9_]{3,20}$/.test(handle)) return `Use ${HANDLE_RULES.charAt(0).toLowerCase()}${HANDLE_RULES.slice(1)}`;
   if (/\d{6,}/.test(handle)) return "Avoid long numbers — they can look like phone numbers or roll numbers";
-  if (/^(admin|moderator|mod|kadam|support|official)/i.test(handle)) return "That handle is reserved";
+  if (/^(admin|moderator|mod|nextchapter|next_chapter|support|official)/i.test(handle)) return "That handle is reserved";
   return null;
 }
 

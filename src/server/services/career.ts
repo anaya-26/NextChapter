@@ -12,7 +12,7 @@ import { createGoal, addMilestone } from "./goals";
 
 /**
  * Career discovery for students who are still exploring. After about three months of real
- * engagement (missed days never reset anything) Kadam offers a discovery review: several
+ * engagement (missed days never reset anything) NextChapter offers a discovery review: several
  * possibilities, each tied to evidence and honest about uncertainty, with small exploration
  * projects. A preliminary review is available earlier and says plainly how little it is based on.
  */

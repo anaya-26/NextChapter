@@ -253,7 +253,7 @@ export async function rejectChangeAction(id: string) {
   refresh();
 }
 
-export async function resolveConflictAction(id: string, keep: "kadam" | "google"): Promise<ActionResult> {
+export async function resolveConflictAction(id: string, keep: "app" | "google"): Promise<ActionResult> {
   const user = await requireUser();
   try {
     await resolveConflict(user.id, id, keep, await now(user.id));
@@ -261,7 +261,7 @@ export async function resolveConflictAction(id: string, keep: "kadam" | "google"
     return fail(e instanceof Error ? e.message : "Couldn't resolve");
   }
   refresh();
-  return { ok: true, message: keep === "kadam" ? "Kept your Kadam version" : "Kept the Google version" };
+  return { ok: true, message: keep === "app" ? "Kept your NextChapter version" : "Kept the Google version" };
 }
 
 export async function updateSyncKindsAction(_prev: ActionResult, form: FormData): Promise<ActionResult> {

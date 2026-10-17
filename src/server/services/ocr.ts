@@ -12,7 +12,7 @@ import { createRequire } from "node:module";
 export type OcrLanguage = "eng" | "hin" | "mar";
 
 const require = createRequire(import.meta.url);
-const cacheDir = path.join(os.tmpdir(), "kadam-tessdata");
+const cacheDir = path.join(os.tmpdir(), "nextchapter-tessdata");
 
 async function ensureLanguageData(langs: OcrLanguage[]) {
   await mkdir(cacheDir, { recursive: true });

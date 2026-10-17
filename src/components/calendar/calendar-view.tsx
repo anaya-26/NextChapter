@@ -158,7 +158,7 @@ function EventDetails({ item, onEdit, onClose }: { item: CalItem; todayKey: stri
   const [pending, start] = useTransition();
   const meta = KIND_META[item.kind] ?? KIND_META.PERSONAL;
   const source =
-    item.source === "PLANNER" ? "Planned by Kadam" : item.source === "GOOGLE" ? "Added in Google Calendar" : item.source === "COMMITMENT" ? "From your classes & commitments" : item.source === "BUSY" ? "Busy time from your Google Calendar (Kadam can’t see what it is)" : "Added by you";
+    item.source === "PLANNER" ? "Planned by NextChapter" : item.source === "GOOGLE" ? "Added in Google Calendar" : item.source === "COMMITMENT" ? "From your classes & commitments" : item.source === "BUSY" ? "Busy time from your Google Calendar (NextChapter can’t see what it is)" : "Added by you";
   return (
     <div className="flex flex-col gap-3 text-sm">
       <div className="flex flex-wrap gap-1.5">

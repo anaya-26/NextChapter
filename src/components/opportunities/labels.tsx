@@ -19,7 +19,7 @@ export const SOURCE_LABELS: Record<string, string> = { DIRECTORY: "Official dire
 
 const fmtDate = (d: Date, tz: string) => d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: tz });
 
-/** What Kadam knows about the source link — never claims more than was checked. */
+/** What NextChapter knows about the source link — never claims more than was checked. */
 export function VerificationBadge({ verification, lastCheckedAt, tz }: { verification: string; lastCheckedAt: Date | null; tz: string }) {
   if (verification === "EXPIRED")
     return (
@@ -63,5 +63,5 @@ export function DeadlineBadge({ deadline, deadlineText, state, tz }: { deadline:
 
 export function readByLabel(tags: string[]) {
   const t = tags.find((x) => x.startsWith("read-by:"))?.slice(8);
-  return t === "AI" ? "AI" : t === "MOCK" ? "Simulated AI" : t === "RULES" ? "Kadam’s rule-based reader" : t === "STUDENT" ? "you" : null;
+  return t === "AI" ? "AI" : t === "MOCK" ? "Simulated AI" : t === "RULES" ? "NextChapter’s rule-based reader" : t === "STUDENT" ? "you" : null;
 }

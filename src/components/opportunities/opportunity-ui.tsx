@@ -46,7 +46,7 @@ export function AddLinkButton() {
         <Link2 /> Add a link
       </Button>
       {open ? (
-        <DialogContent title="Save an opportunity link" description="Paste the link to the original posting. Paste the posting text too and Kadam will fill in the details — you can correct anything afterwards.">
+        <DialogContent title="Save an opportunity link" description="Paste the link to the original posting. Paste the posting text too and NextChapter will fill in the details — you can correct anything afterwards.">
           <ActionForm action={addOpportunityLinkAction} className="flex flex-col gap-4">
             <FormMessage />
             <Field label="Link to the posting" htmlFor="opp-url">

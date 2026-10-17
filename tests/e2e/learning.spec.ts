@@ -16,7 +16,7 @@ test("materials → cited lesson → practice → flashcard review → revision 
   await page.getByRole("tab", { name: "Paste text" }).click();
   await page.getByLabel("Syllabus text").fill(syllabusText);
   await page.getByRole("button", { name: "Read my syllabus" }).click();
-  await expect(page.getByRole("heading", { name: "Check what Kadam found" })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole("heading", { name: "Check what NextChapter found" })).toBeVisible({ timeout: 60_000 });
   await page.getByRole("button", { name: "Confirm syllabus" }).click();
   await expect(page.getByText("Syllabus confirmed — roadmap ready")).toBeVisible();
   const roadmapUrl = page.url().replace(/\?.*$/, "");

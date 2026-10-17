@@ -25,7 +25,7 @@ export default async function NewSyllabusPage(props: PageProps<"/learn/[subjectI
       </Link>
       <PageHeader
         title={`Add your ${subject.name} syllabus`}
-        description="Kadam reads it, shows you what it found — including anything it's unsure about — and builds your roadmap once you confirm."
+        description="NextChapter reads it, shows you what it found — including anything it's unsure about — and builds your roadmap once you confirm."
       />
       <Card className="p-5 sm:p-6">
         <SyllabusUploadForm subjectId={subject.id} subjectName={subject.name} maxMb={env().MAX_UPLOAD_MB} aiVision={ai.configured && !ai.simulated} />

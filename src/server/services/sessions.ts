@@ -11,7 +11,7 @@ import { clearFuturePlan, applyPlan } from "./planner";
 
 /**
  * Study sessions: planned vs actual. Missed sessions are noticed without blame; when the same
- * time of day keeps not working, Kadam asks what's in the way and adjusts the plan.
+ * time of day keeps not working, NextChapter asks what's in the way and adjusts the plan.
  */
 
 export async function getSession(userId: string, id: string) {

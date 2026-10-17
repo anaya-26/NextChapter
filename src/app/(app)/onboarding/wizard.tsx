@@ -131,8 +131,8 @@ function Heading({ title, text }: { title: string; text: string }) {
 export function StepBasics({ p }: { p: ProfileInit }) {
   return (
     <>
-      <Heading title="Welcome! Let's set up Kadam for you" text="A few quick questions. You can skip anything and add it later." />
-      <Field label="What should Kadam call you?" htmlFor="displayName">
+      <Heading title="Welcome! Let's set up NextChapter for you" text="A few quick questions. You can skip anything and add it later." />
+      <Field label="What should NextChapter call you?" htmlFor="displayName">
         <Input id="displayName" name="displayName" defaultValue={p.displayName} maxLength={60} />
         <FieldError name="displayName" />
       </Field>
@@ -244,7 +244,7 @@ export function StepTime({ p }: { p: ProfileInit }) {
 export function StepGoals({ p, inSettings = false }: { p: ProfileInit; inSettings?: boolean }) {
   return (
     <>
-      <Heading title="Goals and interests" text="It's completely fine not to know your career yet — Kadam supports exploring too." />
+      <Heading title="Goals and interests" text="It's completely fine not to know your career yet — NextChapter supports exploring too." />
       <fieldset>
         <legend className="mb-2 text-sm font-medium">How clear is your career direction?</legend>
         <ChoiceCards
@@ -260,7 +260,7 @@ export function StepGoals({ p, inSettings = false }: { p: ProfileInit; inSetting
       </fieldset>
       <TagInput name="selectedDomains" label="Domains you're drawn to" suggestions={DOMAINS} defaultValue={p.selectedDomains} max={10} />
       <TagInput name="interests" label="Interests" defaultValue={p.interests} placeholder="e.g. space, writing, cricket analytics" />
-      <TagInput name="skills" label="Skills you already have" defaultValue={p.skills} placeholder="e.g. Python basics, public speaking" hint="Self-reported for now — later Kadam distinguishes studying a subject from demonstrating a skill." />
+      <TagInput name="skills" label="Skills you already have" defaultValue={p.skills} placeholder="e.g. Python basics, public speaking" hint="Self-reported for now — later NextChapter distinguishes studying a subject from demonstrating a skill." />
       <Field label="Ambitions, in your own words (optional)" htmlFor="ambitions">
         <Textarea id="ambitions" name="ambitions" defaultValue={p.ambitions ?? ""} maxLength={600} />
       </Field>
@@ -285,7 +285,7 @@ export function StepCompanion({
   const patternsLocked = p.minor && !p.consentRecorded;
   return (
     <>
-      <Heading title="Your companion" text="Choose how Kadam talks to you and what it may use." />
+      <Heading title="Your companion" text="Choose how NextChapter talks to you and what it may use." />
       <ToneSlider name="companionTone" defaultValue={p.companionTone} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Coaching intensity" htmlFor="coachingIntensity">
@@ -327,12 +327,12 @@ export function StepCompanion({
       <div className="flex flex-col gap-3 rounded-xl bg-surface-2 p-4">
         <p className="text-sm font-medium">What the AI may use</p>
         <p className="text-sm text-muted">
-          Your profile, goals, progress and calendar help Kadam give relevant suggestions. Your journal stays private unless you allow it — and even then you choose each entry.
+          Your profile, goals, progress and calendar help NextChapter give relevant suggestions. Your journal stays private unless you allow it — and even then you choose each entry.
         </p>
         <Checkbox name="aiUseJournal" label="Allow the companion to read journal entries I mark as shareable" defaultChecked={privacy.aiUseJournal} />
         <Checkbox
           name="aiInferPatterns"
-          label="Let Kadam notice patterns (e.g. which study times work for me) — always shown as tentative"
+          label="Let NextChapter notice patterns (e.g. which study times work for me) — always shown as tentative"
           defaultChecked={privacy.aiInferPatterns && !patternsLocked}
           disabled={patternsLocked}
         />

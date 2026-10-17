@@ -24,7 +24,7 @@ export default async function GroupsPage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Groups"
-        description="You see the groups meant for your age band. Official groups are run and moderated by Kadam."
+        description="You see the groups meant for your age band. Official groups are run and moderated by NextChapter."
         actions={canCreate ? <CreateGroupButton audienceNote={access.ageBand === "ADULT" ? "Groups you start are for students aged 18+." : "Groups you start are for students aged 13–17."} /> : null}
       />
       <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">

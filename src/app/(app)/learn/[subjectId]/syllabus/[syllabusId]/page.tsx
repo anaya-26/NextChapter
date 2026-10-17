@@ -102,7 +102,7 @@ export default async function SyllabusPage(props: PageProps<"/learn/[subjectId]/
     <div>
       {back}
       <PageHeader
-        title={syllabus.status === "CONFIRMED" ? "Edit your syllabus" : "Check what Kadam found"}
+        title={syllabus.status === "CONFIRMED" ? "Edit your syllabus" : "Check what NextChapter found"}
         description="Correct anything that's wrong, fix highlighted items, then confirm. Your roadmap is built only from what you confirm."
         actions={syllabus.extractionMethod ? <ExtractionBadge method={syllabus.extractionMethod} /> : null}
       />

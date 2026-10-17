@@ -22,10 +22,10 @@ function applyTheme(theme: Theme) {
   const root = document.documentElement;
   if (theme === "system") {
     delete root.dataset.theme;
-    localStorage.removeItem("kadam-theme");
+    localStorage.removeItem("nextchapter-theme");
   } else {
     root.dataset.theme = theme;
-    localStorage.setItem("kadam-theme", theme);
+    localStorage.setItem("nextchapter-theme", theme);
   }
 }
 
@@ -38,7 +38,7 @@ export function UserMenuClient({ name, email, liteMode }: { name: string; email:
   // Keep the pre-paint flag in sync with the saved profile preference.
   useEffect(() => {
     try {
-      localStorage.setItem("kadam-lite", String(lite));
+      localStorage.setItem("nextchapter-lite", String(lite));
       if (lite) document.documentElement.dataset.lite = "true";
       else delete document.documentElement.dataset.lite;
     } catch {}

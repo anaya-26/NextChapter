@@ -96,7 +96,7 @@ export default async function CalendarPage(props: PageProps<"/calendar">) {
 
       <CalendarView days={days} items={items} startHour={startHour} endHour={endHour} timezone={tz} todayKey={todayKey} />
       <p className="text-xs text-muted">
-        Dashed blocks are your regular classes and commitments (edit them in Settings). Striped blocks are busy times from Google Calendar — Kadam sees only that you’re busy, not what it is.
+        Dashed blocks are your regular classes and commitments (edit them in Settings). Striped blocks are busy times from Google Calendar — NextChapter sees only that you’re busy, not what it is.
       </p>
     </div>
   );

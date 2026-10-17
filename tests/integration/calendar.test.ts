@@ -285,7 +285,7 @@ describe("Google Calendar sync (fake Google)", () => {
 
     const conn = await completeConnection(id, "code-1", MON);
     expect(conn.studyCalendarId).toBeTruthy();
-    expect(google.calendars.get(conn.studyCalendarId!)?.summary).toBe("Kadam — study plan");
+    expect(google.calendars.get(conn.studyCalendarId!)?.summary).toBe("NextChapter — study plan");
     // Only chosen kinds are proposed; nothing is in Google yet.
     const changes = await listChanges(id);
     expect(changes.map((c) => c.summary).sort()).toEqual([expect.stringMatching(/^Add “Chemistry test”/), expect.stringMatching(/^Add “Revise Ohm's law”/)]);
@@ -309,7 +309,7 @@ describe("Google Calendar sync (fake Google)", () => {
     const result = await applyChanges(id, "all", MON);
     expect(result.conflicts).toBe(1);
     const conflict = (await listChanges(id)).find((c) => c.status === "CONFLICT")!;
-    expect(conflict.conflictDetail).toMatchObject({ kadam: { title: "Chemistry unit test" }, google: { title: "Chemistry test" } });
+    expect(conflict.conflictDetail).toMatchObject({ app: { title: "Chemistry unit test" }, google: { title: "Chemistry test" } });
     await resolveConflict(id, conflict.id, "google", MON);
     const resolved = await prisma.calendarEvent.findUniqueOrThrow({ where: { id: exam.id } });
     expect(resolved.title).toBe("Chemistry test");
@@ -331,7 +331,7 @@ describe("Google Calendar sync (fake Google)", () => {
     // Busy times keep the planner away.
     expect(await refreshBusy(id, MON)).toBe(1);
 
-    // Disconnect revokes access, optionally removes the Kadam calendar, and forgets sync state.
+    // Disconnect revokes access, optionally removes the NextChapter calendar, and forgets sync state.
     await disconnect(id, { deleteGoogleCalendar: true });
     expect(google.revoked).toEqual(["refresh-code-1"]);
     expect(google.calendars.has(conn.studyCalendarId!)).toBe(false);

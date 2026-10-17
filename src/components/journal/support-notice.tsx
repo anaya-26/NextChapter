@@ -16,7 +16,7 @@ export function SupportNotice() {
             </li>
           ))}
         </ul>
-        <p className="text-muted">Kadam isn’t a counsellor and won’t analyse this entry. Your studies can wait — you matter more.</p>
+        <p className="text-muted">NextChapter isn’t a counsellor and won’t analyse this entry. Your studies can wait — you matter more.</p>
       </div>
     </div>
   );

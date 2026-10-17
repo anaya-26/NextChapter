@@ -6,7 +6,7 @@ test("onboarding, privacy for minors, memory controls and goals", async ({ page 
   await expect(page).toHaveURL(/\/onboarding/);
 
   // Step 1 — about you (a 16-year-old)
-  await page.getByLabel("What should Kadam call you?").fill("Riya");
+  await page.getByLabel("What should NextChapter call you?").fill("Riya");
   await page.getByText("16–17", { exact: true }).click();
   await page.getByRole("button", { name: "Save & continue" }).click();
 
@@ -36,7 +36,7 @@ test("onboarding, privacy for minors, memory controls and goals", async ({ page 
 
   // Step 6 — companion; pattern noticing is locked for a minor without consent
   await expect(page.getByRole("heading", { name: "Your companion" })).toBeVisible();
-  await expect(page.getByLabel(/Let Kadam notice patterns/)).toBeDisabled();
+  await expect(page.getByLabel(/Let NextChapter notice patterns/)).toBeDisabled();
   await page.getByRole("button", { name: "Finish", exact: true }).click();
 
   await expect(page).toHaveURL(/\/today/);

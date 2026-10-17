@@ -33,7 +33,7 @@ const KIND_LABEL: Record<string, string> = {
 };
 
 const SOURCE_LABEL: Record<string, string> = {
-  STUDENT: "You told Kadam",
+  STUDENT: "You told NextChapter",
   CONVERSATION: "From a conversation",
   JOURNAL: "From your journal",
   PRACTICE: "From practice results",
@@ -47,7 +47,7 @@ export function MemoryList({ items }: { items: Item[] }) {
     return (
       <EmptyState
         title="Nothing remembered yet"
-        description="As you chat, reflect and practise, Kadam may note helpful things here — always visible and always yours to change."
+        description="As you chat, reflect and practise, NextChapter may note helpful things here — always visible and always yours to change."
       />
     );
   }

@@ -7,7 +7,7 @@ import { autoMarkMissed } from "./sessions";
 import { preferredStartTime, scheduleRevision } from "./revision";
 
 /**
- * "Fresh start": when a student has fallen behind or comes back after a break, Kadam shows the
+ * "Fresh start": when a student has fallen behind or comes back after a break, NextChapter shows the
  * backlog without judgement and offers a few ways to restart with a lighter, realistic plan.
  */
 

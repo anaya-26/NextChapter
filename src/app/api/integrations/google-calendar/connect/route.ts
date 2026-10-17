@@ -4,7 +4,7 @@ import { env } from "@/server/env";
 import { createConnectState } from "@/server/services/calendar-sync";
 import { googleOAuth } from "@/server/integrations/google-calendar";
 
-const NONCE_COOKIE = "kadam_gcal_nonce";
+const NONCE_COOKIE = "nextchapter_gcal_nonce";
 
 /** Starts Google's consent screen for the two narrow calendar scopes. */
 export async function GET(request: Request) {

@@ -99,7 +99,7 @@ export default async function EntryPage(props: PageProps<"/journal/[entryId]">) 
       </Card>
       {entry.memories.length ? (
         <Card className="p-5">
-          <SectionTitle action={<Link href="/settings/memory" className="text-sm font-medium text-primary hover:underline">Manage memory</Link>}>What Kadam noted from this entry</SectionTitle>
+          <SectionTitle action={<Link href="/settings/memory" className="text-sm font-medium text-primary hover:underline">Manage memory</Link>}>What NextChapter noted from this entry</SectionTitle>
           <ul className="flex flex-col gap-1.5 text-sm">
             {entry.memories.map((m) => (
               <li key={m.id} className="rounded-lg bg-surface-2 px-3 py-2">

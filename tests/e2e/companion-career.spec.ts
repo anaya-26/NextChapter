@@ -17,7 +17,7 @@ test("chat with the companion, act on a suggestion, and get a discovery review f
 
   // A follow-up message in the same conversation.
   await page.goBack();
-  await page.getByLabel("Message Kadam").fill("Quiz me on what I studied");
+  await page.getByLabel("Message NextChapter").fill("Quiz me on what I studied");
   await page.getByRole("button", { name: "Send" }).click();
   await expect(page.getByRole("button", { name: "Review flashcards" })).toBeVisible({ timeout: 30_000 });
 

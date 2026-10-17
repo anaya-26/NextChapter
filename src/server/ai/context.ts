@@ -157,7 +157,7 @@ export async function buildStudentContext(userId: string, want: ContextPart[]): 
     const memories = await memoriesForAi(userId);
     if (memories.length) {
       lines.push(
-        "Things the student has told Kadam or confirmed (TENTATIVE items are unconfirmed guesses — treat them as possibilities, not facts):\n" +
+        "Things the student has told NextChapter or confirmed (TENTATIVE items are unconfirmed guesses — treat them as possibilities, not facts):\n" +
           memories.map((m) => `- [${m.certainty}] ${m.content}`).join("\n"),
       );
       used.push(`remembered notes (${memories.length})`);

@@ -87,7 +87,7 @@ async function ExploreView({ userId, at, tz, q, kind, mode, allStages, includeCl
       </form>
       {!hasStage ? (
         <Notice tone="info">
-          Add your education stage in <Link href="/settings">Settings</Link> so Kadam can show what fits you.
+          Add your education stage in <Link href="/settings">Settings</Link> so NextChapter can show what fits you.
         </Notice>
       ) : null}
       {items.length ? (
@@ -143,7 +143,7 @@ async function ExploreView({ userId, at, tz, q, kind, mode, allStages, includeCl
         <EmptyState icon={Briefcase} title="Nothing matches these filters" description="Try fewer filters, include other education stages, or save a link you found yourself." action={<AddLinkButton />} />
       )}
       <p className="text-xs text-muted">
-        The official directory is a short, hand-checked list of recurring government and well-known programmes — not live openings. Dates and amounts change every cycle, so Kadam links to the official page and shows when each link was last checked. Private portals such as Internshala and Unstop have no public feed, so Kadam doesn’t copy their listings: save any posting you like with “Add a link”.
+        The official directory is a short, hand-checked list of recurring government and well-known programmes — not live openings. Dates and amounts change every cycle, so NextChapter links to the official page and shows when each link was last checked. Private portals such as Internshala and Unstop have no public feed, so NextChapter doesn’t copy their listings: save any posting you like with “Add a link”.
       </p>
     </>
   );
@@ -156,7 +156,7 @@ async function SavedView({ userId, at, tz }: { userId: string; at: Date; tz: str
       <EmptyState
         icon={Briefcase}
         title="No saved opportunities yet"
-        description="Save one from Explore or add a link you found. Kadam adds its deadline to your calendar, checks your fit and helps you prepare."
+        description="Save one from Explore or add a link you found. NextChapter adds its deadline to your calendar, checks your fit and helps you prepare."
         action={
           <Button asChild variant="outline">
             <Link href="/goals/opportunities">Explore opportunities</Link>

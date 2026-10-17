@@ -60,7 +60,7 @@ export default async function PlanPage(props: PageProps<"/calendar/plan">) {
           </Link>
         }
         title="Plan my study time"
-        description="Kadam fits your next topics, deadlines and exam revision into free time around classes and commitments — with breaks, a daily limit and buffers. Nothing is added until you agree."
+        description="NextChapter fits your next topics, deadlines and exam revision into free time around classes and commitments — with breaks, a daily limit and buffers. Nothing is added until you agree."
       />
 
       <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -84,7 +84,7 @@ export default async function PlanPage(props: PageProps<"/calendar/plan">) {
         <EmptyState
           icon={Lightbulb}
           title="Nothing to plan yet"
-          description="Add a syllabus in Learn, or a deadline or exam in the calendar — then Kadam can plan study time for it."
+          description="Add a syllabus in Learn, or a deadline or exam in the calendar — then NextChapter can plan study time for it."
           action={
             <Link href="/learn" className={buttonVariants()}>
               Go to Learn

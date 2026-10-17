@@ -9,7 +9,7 @@ import { bootstrapStudent } from "./services/profile";
 function createAuth() {
   const e = env();
   return betterAuth({
-    appName: "Kadam",
+    appName: "NextChapter",
     baseURL: e.BETTER_AUTH_URL,
     secret: e.BETTER_AUTH_SECRET,
     database: prismaAdapter(prisma, { provider: "postgresql" }),

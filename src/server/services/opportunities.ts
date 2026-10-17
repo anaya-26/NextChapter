@@ -20,7 +20,7 @@ import { getProfile } from "./profile";
  *  - DIRECTORY: a hand-written list of official programmes and portals (shared, no user data);
  *  - FEED: feeds the deployment is permitted to use (OPPORTUNITY_FEEDS), refreshed in the background;
  *  - MANUAL: links a student saves, private to them.
- * Kadam never scrapes sites that don't offer feeds. Links are checked, closed deadlines are marked
+ * NextChapter never scrapes sites that don't offer feeds. Links are checked, closed deadlines are marked
  * expired, and anything unconfirmed says so.
  */
 
@@ -222,7 +222,7 @@ export async function addManualOpportunity(userId: string, input: ManualInput, a
   const { draft, by } = input.postingText ? await extractPosting(userId, input.postingText, at) : { draft: null, by: "STUDENT" as const };
   const deadlineKey = input.deadline ?? draft?.deadlineKey ?? null;
   const title = input.title ?? draft?.title;
-  if (!title) throw new Error("Give the opportunity a title (or paste the posting text so Kadam can read it)");
+  if (!title) throw new Error("Give the opportunity a title (or paste the posting text so NextChapter can read it)");
   const host = new URL(input.sourceUrl).hostname.replace(/^www\./, "");
   const opp = await prisma.opportunity.create({
     data: {

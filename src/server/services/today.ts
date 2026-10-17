@@ -72,7 +72,7 @@ export async function todayOverview(userId: string, at: Date) {
   } else if (cardsDue) {
     primary = { type: "LINK", title: `Review ${cardsDue} flashcard${cardsDue === 1 ? "" : "s"}`, href: "/learn/review", detail: "A few minutes of recall keeps things fresh.", label: "Review" };
   } else {
-    primary = { type: "PLAN", title: subjects.length ? "Plan your week" : "Add your first subject", detail: subjects.length ? "Kadam will fit study time around your classes." : "Then add its syllabus — a photo is enough." };
+    primary = { type: "PLAN", title: subjects.length ? "Plan your week" : "Add your first subject", detail: subjects.length ? "NextChapter will fit study time around your classes." : "Then add its syllabus — a photo is enough." };
   }
 
   const remaining = agenda

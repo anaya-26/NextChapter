@@ -35,7 +35,7 @@ export default async function CompanionPage(props: PageProps<"/companion">) {
     <div className="flex flex-col gap-5">
       <PageHeader
         title="Companion"
-        description="Ask for an explanation, a plan, a quiz, or just a nudge to start. Kadam uses only what you allow in Privacy settings and shows what it used."
+        description="Ask for an explanation, a plan, a quiz, or just a nudge to start. NextChapter uses only what you allow in Privacy settings and shows what it used."
         actions={<CoachingSettings tone={profile.companionTone} intensity={profile.coachingIntensity} reminders={profile.reminderFrequency} />}
       />
       {!ai.configured ? (

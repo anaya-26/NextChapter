@@ -1,5 +1,5 @@
 {
-  "name": "kadam-student-companion",
+  "name": "nextchapter-student-companion",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -74,7 +74,7 @@
     "typescript": "^5",
     "vitest": "5.0.5"
   },
-  "description": "Kadam — an India-focused AI student companion (Next.js, PostgreSQL, Claude).",
+  "description": "NextChapter — an India-focused AI student companion (Next.js, PostgreSQL, Claude).",
   "engines": {
     "node": ">=22.12"
   }

@@ -476,7 +476,7 @@ export async function RevisePanel({ ctx }: { ctx: TopicContext }) {
       ))}
       <Card className="flex flex-col gap-3 p-4 sm:p-5">
         <SectionTitle>Schedule a revision</SectionTitle>
-        <p className="text-sm text-muted">It’s added to your Kadam calendar. After each revision, the next one is spaced out according to how much you remembered.</p>
+        <p className="text-sm text-muted">It’s added to your NextChapter calendar. After each revision, the next one is spaced out according to how much you remembered.</p>
         <ScheduleRevisionForm topicId={ctx.topic.id} defaultDate={tomorrow} defaultTime={preferredStartTime(ctx.profile.preferredStudyTimes)} />
       </Card>
       {mistakes.length ? (

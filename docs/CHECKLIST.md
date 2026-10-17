@@ -1,4 +1,4 @@
-# Kadam — module checklist
+# NextChapter — module checklist
 
 Legend: ✅ done and tested · 🟡 partial / works with limitations · ⏳ planned in a later stage · 🔌 needs an external credential to go live
 
@@ -77,7 +77,7 @@ Last updated: Stage 12 (verification, docs and delivery). Everything listed is b
 - ✅ Restart flow (fresh start, catch up gradually, exams first) with a lighter first three days and respread revisions
 - ✅ In-app reminders, exam/deadline countdowns (7/3/1 days), reminder frequency, quiet hours; 🔌 phone push/email not integrated
 - ✅ .ics export for any calendar app
-- 🔌 Google Calendar (needs GOOGLE_CLIENT_ID/SECRET): least-privilege scopes (calendar.app.created + calendar.freebusy), separate “Kadam — study plan” calendar, every change previewed and approved, conflicts resolved side by side, choice of what to copy, encrypted tokens, disconnect (optionally deleting the calendar) — tested against an in-memory Google double
+- 🔌 Google Calendar (needs GOOGLE_CLIENT_ID/SECRET): least-privilege scopes (calendar.app.created + calendar.freebusy), separate “NextChapter — study plan” calendar, every change previewed and approved, conflicts resolved side by side, choice of what to copy, encrypted tokens, disconnect (optionally deleting the calendar) — tested against an in-memory Google double
 - ✅ Today: one clear start action, up to three priorities, due revisions and flashcards, countdowns, this week’s planned vs done, quick focus, study log, restart and obstacle prompts, welcome-back celebration
 ## 8. Journal & study log
 - ✅ Private journal: quick check-ins (mood, optional energy, one line), reflections (went well / difficult / topics, prefilled with today’s planned vs actual), notes, photos (up to 4) and recorded voice notes — never shared to Community

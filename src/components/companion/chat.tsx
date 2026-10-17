@@ -181,7 +181,7 @@ export function Chat({ conversationId, initial, starters, voiceLang, autoSend }:
         }}
       >
         <label htmlFor="companion-input" className="sr-only">
-          Message Kadam
+          Message NextChapter
         </label>
         <Textarea
           id="companion-input"
@@ -193,7 +193,7 @@ export function Chat({ conversationId, initial, starters, voiceLang, autoSend }:
               void send(draft);
             }
           }}
-          placeholder="Ask Kadam anything…"
+          placeholder="Ask NextChapter anything…"
           className="min-h-11 flex-1 resize-none border-0 shadow-none focus-visible:ring-0"
           rows={1}
           maxLength={4000}
@@ -232,10 +232,10 @@ export function CoachingSettings({ tone, intensity, reminders }: { tone: number;
         <Settings2 /> Voice & reminders
       </Button>
       {open ? (
-        <DialogContent title="How Kadam talks to you" description="Change these any time.">
+        <DialogContent title="How NextChapter talks to you" description="Change these any time.">
           <ActionForm action={updateCoachingAction} onSuccess={() => setOpen(false)} className="flex flex-col gap-4">
             <ToneSlider name="companionTone" defaultValue={tone} />
-            <Field label="How hard should Kadam push?" htmlFor="intensity">
+            <Field label="How hard should NextChapter push?" htmlFor="intensity">
               <Select id="intensity" name="coachingIntensity" defaultValue={intensity}>
                 <option value="GENTLE">Gently — one small step at a time</option>
                 <option value="BALANCED">Balanced</option>

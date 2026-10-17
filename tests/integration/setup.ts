@@ -11,7 +11,7 @@ process.env.BETTER_AUTH_SECRET ||= "test-secret-test-secret-test-secret-123";
 process.env.APP_ENCRYPTION_KEY ||= Buffer.alloc(32, 7).toString("base64");
 process.env.AI_PROVIDER = "mock";
 process.env.ENABLE_TEST_CLOCK = "true";
-process.env.STORAGE_DIR = mkdtempSync(path.join(os.tmpdir(), "kadam-test-storage-"));
+process.env.STORAGE_DIR = mkdtempSync(path.join(os.tmpdir(), "nextchapter-test-storage-"));
 process.env.OCR_LOCAL_ENABLED = "false";
 
 beforeAll(async () => {

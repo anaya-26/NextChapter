@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   return new Response(tsv, {
     headers: {
       "content-type": "text/tab-separated-values; charset=utf-8",
-      "content-disposition": `attachment; filename="kadam-flashcards.tsv"`,
+      "content-disposition": `attachment; filename="nextchapter-flashcards.tsv"`,
       "cache-control": "private, no-store",
     },
   });

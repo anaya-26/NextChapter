@@ -13,4 +13,4 @@ export function InlineScript({ html }: { html: string }) {
 }
 
 /** Applies saved theme and Lite mode before paint to avoid a flash. */
-export const PREPAINT_SCRIPT = `try{var d=document.documentElement,t=localStorage.getItem("kadam-theme");if(t==="dark"||t==="light")d.dataset.theme=t;var l=localStorage.getItem("kadam-lite");if(l==="true"||(l===null&&navigator.connection&&navigator.connection.saveData))d.dataset.lite="true"}catch(e){}`;
+export const PREPAINT_SCRIPT = `try{var d=document.documentElement,t=localStorage.getItem("nextchapter-theme");if(t==="dark"||t==="light")d.dataset.theme=t;var l=localStorage.getItem("nextchapter-lite");if(l==="true"||(l===null&&navigator.connection&&navigator.connection.saveData))d.dataset.lite="true"}catch(e){}`;

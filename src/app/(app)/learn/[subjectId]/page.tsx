@@ -46,7 +46,7 @@ export default async function RoadmapPage(props: PageProps<"/learn/[subjectId]">
           <EmptyState
             icon={FileUp}
             title="Start with your syllabus"
-            description="A photo, PDF or pasted text is enough — even without textbooks, Kadam can build a roadmap and find resources."
+            description="A photo, PDF or pasted text is enough — even without textbooks, NextChapter can build a roadmap and find resources."
             action={
               <Link className={buttonVariants()} href={`/learn/${subject.id}/syllabus/new`}>
                 Add syllabus

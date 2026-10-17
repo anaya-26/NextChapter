@@ -58,7 +58,7 @@ export default async function TodayPage(props: PageProps<"/today">) {
           <Sparkles className="mt-0.5 size-5 text-primary" aria-hidden />
           <div>
             <p className="font-semibold">You&apos;re set up!</p>
-            <p className="text-sm text-muted">Next: add a syllabus in Learn so Kadam can build your roadmap.</p>
+            <p className="text-sm text-muted">Next: add a syllabus in Learn so NextChapter can build your roadmap.</p>
           </div>
         </Card>
       ) : null}

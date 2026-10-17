@@ -80,7 +80,7 @@ export default async function MaterialsPage(props: PageProps<"/learn/[subjectId]
           </Link>
         }
         title="Study materials"
-        description="Your notes, slides, textbooks and recordings. Kadam compares them with your syllabus and uses them, with citations, when explaining topics."
+        description="Your notes, slides, textbooks and recordings. NextChapter compares them with your syllabus and uses them, with citations, when explaining topics."
       />
 
       <Card className="flex flex-col gap-3 p-4 sm:p-5">

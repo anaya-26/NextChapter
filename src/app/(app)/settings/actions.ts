@@ -111,7 +111,7 @@ export async function addMemoryAction(_prev: ActionResult, form: FormData) {
   const r = memorySchema.safeParse(formToObject(form));
   if (!r.success) return fail("Please check the highlighted fields.", fieldErrorsFrom(r.error));
   await addMemory(user.id, { ...r.data, source: "STUDENT", certainty: "STATED" });
-  return ok("Kadam will remember this");
+  return ok("NextChapter will remember this");
 }
 
 export async function memoryAction(op: "confirm" | "delete", id: string) {

@@ -27,7 +27,7 @@ export default async function NotificationsPage() {
     <div className="flex flex-col gap-5">
       <PageHeader
         title="Notifications"
-        description="Reminders, revision prompts and updates. Adjust how often you hear from Kadam in Settings → Your companion."
+        description="Reminders, revision prompts and updates. Adjust how often you hear from NextChapter in Settings → Your companion."
         actions={unread ? <MarkAllRead /> : null}
       />
       {items.length === 0 ? (

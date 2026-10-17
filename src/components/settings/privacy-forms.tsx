@@ -25,7 +25,7 @@ const ROWS: { key: keyof PrivacyState; title: string; text: string; lockable?: b
     title: "Journal (entries you choose)",
     text: "Only entries you individually mark as shareable. Turning this off also deletes everything learned from your journal.",
   },
-  { key: "aiMemoryEnabled", title: "Memory", text: "Remember things across conversations. You can review every item under “What Kadam remembers”." },
+  { key: "aiMemoryEnabled", title: "Memory", text: "Remember things across conversations. You can review every item under “What NextChapter remembers”." },
   {
     key: "aiInferPatterns",
     title: "Notice patterns",
@@ -71,7 +71,7 @@ export function ConsentForm() {
       </Field>
       <Checkbox
         name="confirm"
-        label="I am this student's parent or legal guardian. I have read how Kadam handles data and I consent to the optional features above."
+        label="I am this student's parent or legal guardian. I have read how NextChapter handles data and I consent to the optional features above."
       />
       <FieldError name="confirm" />
       <div>

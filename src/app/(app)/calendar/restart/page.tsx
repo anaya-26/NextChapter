@@ -100,7 +100,7 @@ export default async function RestartPage() {
           </Card>
         ))}
       </div>
-      <p className="text-sm text-muted">Each option replaces only sessions Kadam planned for the future. Your classes, events and finished work stay as they are.</p>
+      <p className="text-sm text-muted">Each option replaces only sessions NextChapter planned for the future. Your classes, events and finished work stay as they are.</p>
     </div>
   );
 }

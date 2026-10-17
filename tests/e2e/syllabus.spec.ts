@@ -16,7 +16,7 @@ test("upload a syllabus, correct it, confirm, and use the roadmap", async ({ pag
   await page.getByRole("button", { name: "Read my syllabus" }).click();
 
   // Background extraction (simulated AI) → correction step.
-  await expect(page.getByRole("heading", { name: "Check what Kadam found" })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole("heading", { name: "Check what NextChapter found" })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByText(/Simulated AI · extraction/)).toBeVisible();
   const ohmField = page.locator('input[value="Ohm\'s law"]');
   await ohmField.fill("Ohm's law and V–I characteristics");

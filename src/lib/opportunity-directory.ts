@@ -2,9 +2,9 @@
  * A small, hand-written directory of official Indian programmes and portals. These are
  * recurring schemes, not individual openings: dates, stipends and rules change every cycle,
  * so each entry says only what is broadly stable and sends the student to the official page.
- * Kadam checks the links automatically and shows when each was last checked.
+ * NextChapter checks the links automatically and shows when each was last checked.
  *
- * Summaries were written from public information available in 2025–26. Kadam's team has not
+ * Summaries were written from public information available in 2025–26. NextChapter's team has not
  * verified the current cycle of any programme — the official page is the source of truth.
  */
 
@@ -29,7 +29,7 @@ export type DirectoryEntry = {
   requirements: string[];
   domains: string[];
   stages: EducationStageName[];
-  /** Portals list many openings; Kadam links to them but doesn't copy their listings. */
+  /** Portals list many openings; NextChapter links to them but doesn't copy their listings. */
   isPortal?: boolean;
 };
 
@@ -314,7 +314,7 @@ export const OPPORTUNITY_DIRECTORY: DirectoryEntry[] = [
     kind: "INTERNSHIP",
     sourceName: "Internshala",
     sourceUrl: "https://internshala.com/",
-    description: "A large private internship and training portal. Kadam doesn’t copy its listings — save any posting you like with “Add a link”.",
+    description: "A large private internship and training portal. NextChapter doesn’t copy its listings — save any posting you like with “Add a link”.",
     eligibility: "Each listing has its own criteria.",
     educationRequirements: "Varies by listing",
     location: "Varies by listing",
@@ -334,7 +334,7 @@ export const OPPORTUNITY_DIRECTORY: DirectoryEntry[] = [
     kind: "COMPETITION",
     sourceName: "Unstop",
     sourceUrl: "https://unstop.com/",
-    description: "A private portal for competitions, hackathons, quizzes and some internships. Kadam doesn’t copy its listings — save any posting you like with “Add a link”.",
+    description: "A private portal for competitions, hackathons, quizzes and some internships. NextChapter doesn’t copy its listings — save any posting you like with “Add a link”.",
     eligibility: "Each listing has its own criteria.",
     educationRequirements: "Varies by listing",
     location: "Varies by listing",

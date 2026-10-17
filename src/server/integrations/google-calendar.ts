@@ -2,9 +2,9 @@ import "server-only";
 import { env } from "../env";
 
 /**
- * Minimal Google Calendar REST client. Kadam asks for two narrow scopes only:
- * - calendar.app.created: create a separate "Kadam — study plan" calendar and manage events
- *   in it (Kadam can't read or change the student's other calendars), and
+ * Minimal Google Calendar REST client. NextChapter asks for two narrow scopes only:
+ * - calendar.app.created: create a separate "NextChapter — study plan" calendar and manage events
+ *   in it (NextChapter can't read or change the student's other calendars), and
  * - calendar.freebusy: see when the student is busy (no event titles or details).
  */
 export const GOOGLE_CALENDAR_SCOPES = ["https://www.googleapis.com/auth/calendar.app.created", "https://www.googleapis.com/auth/calendar.freebusy"] as const;
@@ -28,7 +28,7 @@ export type GoogleEvent = GoogleEventInput & { id: string; etag: string; updated
 
 export class GooglePreconditionError extends Error {
   constructor() {
-    super("The event was changed in Google Calendar since Kadam last saw it.");
+    super("The event was changed in Google Calendar since NextChapter last saw it.");
   }
 }
 export class GoogleGoneError extends Error {
@@ -129,7 +129,7 @@ export function realGoogleCalendarApi(getToken: () => Promise<string>): GoogleCa
   }
   const cal = (id: string) => encodeURIComponent(id);
   return {
-    createCalendar: (summary, timeZone) => call("POST", "/calendars", { summary, timeZone, description: "Study plan managed by Kadam. Changes you make here are shown in Kadam for approval." }),
+    createCalendar: (summary, timeZone) => call("POST", "/calendars", { summary, timeZone, description: "Study plan managed by NextChapter. Changes you make here are shown in NextChapter for approval." }),
     deleteCalendar: async (calendarId) => {
       await call("DELETE", `/calendars/${cal(calendarId)}`).catch((e) => {
         if (!(e instanceof GoogleGoneError)) throw e;

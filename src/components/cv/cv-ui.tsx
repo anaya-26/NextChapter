@@ -60,7 +60,7 @@ export function CvDetailsForm({
       <Field label="Headline" htmlFor="cvd-headline" hint="e.g. Second-year B.Sc Physics student, Pune">
         <Input id="cvd-headline" name="headline" defaultValue={values.headline} />
       </Field>
-      <Field label="Contact line" htmlFor="cvd-contact" hint="What you want on the CV — email, phone, city, portfolio link. Kadam doesn’t add any by itself.">
+      <Field label="Contact line" htmlFor="cvd-contact" hint="What you want on the CV — email, phone, city, portfolio link. NextChapter doesn’t add any by itself.">
         <Input id="cvd-contact" name="contactLine" defaultValue={values.contactLine} />
       </Field>
       <Field label="Summary (your words)" htmlFor="cvd-summary" hint="Two or three honest sentences about what you’ve done and what you’re looking for.">

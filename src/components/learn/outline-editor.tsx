@@ -232,7 +232,7 @@ export function OutlineEditor({
 
       <Card className="p-5">
         <h2 className="font-semibold">Assessment details</h2>
-        <p className="mb-3 text-sm text-muted">Only details your syllabus actually states — marks, weightage, exam duration, practicals. Kadam never assumes an exam pattern.</p>
+        <p className="mb-3 text-sm text-muted">Only details your syllabus actually states — marks, weightage, exam duration, practicals. NextChapter never assumes an exam pattern.</p>
         <ul className="flex flex-col gap-2">
           {assessment.map((a, i) => (
             <li key={i} className={cn("flex flex-wrap items-center gap-2", a.uncertain && "rounded-lg bg-warning-soft/40 p-1.5")}>

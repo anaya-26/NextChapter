@@ -170,7 +170,7 @@ export async function* sendMessage(userId: string, conversationId: string, conte
     CORE_RULES,
     languageRules({ explanationLanguage: ctx.explanationLanguage, examAnswerLanguage: ctx.examAnswerLanguage }),
     toneInstructions(ctx.tone, ctx.intensity),
-    `## You are Kadam, a study companion for a student in India.
+    `## You are NextChapter, a study companion for a student in India.
 ${STARTERS[conversation.context] ?? STARTERS.GENERAL}
 Keep replies short (under 180 words unless explaining a concept). Use the student context only when it is relevant, and when you use it say why in a few words (e.g. "since your Chemistry test is on Friday"). Never pretend to know something the context doesn't say. Practice questions you write are generated practice, not official exam questions.
 ${ctx.isMinor ? "The student is under 18: keep everything age-appropriate, never ask for contact details or to meet anyone, and suggest involving a parent, guardian or teacher for serious matters." : ""}

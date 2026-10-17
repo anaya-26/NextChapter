@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/server/session";
 import { now } from "@/server/clock";
 import { completeConnection, verifyConnectState } from "@/server/services/calendar-sync";
 
-const NONCE_COOKIE = "kadam_gcal_nonce";
+const NONCE_COOKIE = "nextchapter_gcal_nonce";
 
 /** Google redirects here after consent; the state must match this browser and signed-in student. */
 export async function GET(request: NextRequest) {

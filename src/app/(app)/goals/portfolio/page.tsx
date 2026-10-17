@@ -71,7 +71,7 @@ export default async function PortfolioPage() {
 
       {suggestions.length ? (
         <section>
-          <SectionTitle>From elsewhere in Kadam</SectionTitle>
+          <SectionTitle>From elsewhere in NextChapter</SectionTitle>
           <Card className="divide-y divide-border">
             {suggestions.map((s) => (
               <div key={s.key} className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center">

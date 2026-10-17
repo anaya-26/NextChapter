@@ -46,7 +46,7 @@ export default async function CareerPage() {
         description={
           clear
             ? "You know your direction — turn it into skills, projects and roles to work towards, and save target companies and cities so opportunities match."
-            : "Not knowing yet is normal. Explore with small projects; after about three months of real work, Kadam offers an evidence-based discovery review."
+            : "Not knowing yet is normal. Explore with small projects; after about three months of real work, NextChapter offers an evidence-based discovery review."
         }
       />
 
@@ -121,7 +121,7 @@ export default async function CareerPage() {
             <CareerReviewButton label="Get preliminary findings" />
           </div>
         ) : (
-          <p className="text-sm text-muted">Use Kadam on a few more days to unlock even preliminary findings.</p>
+          <p className="text-sm text-muted">Use NextChapter on a few more days to unlock even preliminary findings.</p>
         )}
       </Card>
 

@@ -21,7 +21,7 @@ export default async function SettingsPage() {
   const e = env();
   const links = [
     { href: "/settings/privacy", icon: Shield, title: "Privacy & AI permissions", text: "Choose what the companion may use; guardian consent" },
-    { href: "/settings/memory", icon: Brain, title: "What Kadam remembers", text: "View, correct or delete remembered information" },
+    { href: "/settings/memory", icon: Brain, title: "What NextChapter remembers", text: "View, correct or delete remembered information" },
     { href: "/settings/integrations", icon: PlugZap, title: "Integrations & status", text: "What works in this installation" },
     ...(e.testClockEnabled || e.ENABLE_DEMO_TOOLS
       ? [{ href: "/settings/developer", icon: FlaskConical, title: "Testing tools", text: "Test clock and labelled demo history" }]
@@ -72,7 +72,7 @@ export default async function SettingsPage() {
 
       <Card className="p-5 sm:p-6">
         <SectionTitle>Your data</SectionTitle>
-        <p className="text-sm text-muted">Download everything Kadam stores about you, or delete your account permanently.</p>
+        <p className="text-sm text-muted">Download everything NextChapter stores about you, or delete your account permanently.</p>
         <div className="mt-4 flex flex-col gap-4">
           <a href="/api/account/export" className="inline-flex w-fit items-center gap-2 rounded-[10px] border border-border-strong px-4 py-2 text-sm font-medium hover:bg-surface-2">
             <Download className="size-4" aria-hidden /> Export my data (JSON)

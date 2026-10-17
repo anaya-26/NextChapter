@@ -1,6 +1,6 @@
-# Kadam — a study companion for students in India
+# NextChapter — a study companion for students in India
 
-Kadam (“step”) helps school, college and competitive-exam students work out **what to learn, why it matters, which resources to use, how to practise and what to do next**. It is a responsive web app for phones and laptops. English comes first; the app shell and navigation are already translated into Hindi and Marathi, and AI explanations follow the student’s language preference.
+NextChapter helps school, college and competitive-exam students work out **what to learn, why it matters, which resources to use, how to practise and what to do next**. It is a responsive web app for phones and laptops. English comes first; the app shell and navigation are already translated into Hindi and Marathi, and AI explanations follow the student’s language preference.
 
 The app is honest about what it can do. Every AI output is labelled, simulated AI is marked, demonstration data carries a “Demo data” badge, and **Settings → Integrations** shows which integrations work in your deployment.
 
@@ -31,10 +31,10 @@ The app is honest about what it can do. Every AI output is labelled, simulated A
 ```bash
 # 1. Databases (development, integration tests, end-to-end tests)
 sudo -u postgres psql <<'SQL'
-CREATE ROLE kadam LOGIN PASSWORD 'change-me' CREATEDB;
-CREATE DATABASE kadam_dev  OWNER kadam;
-CREATE DATABASE kadam_test OWNER kadam;
-CREATE DATABASE kadam_e2e  OWNER kadam;
+CREATE ROLE nextchapter LOGIN PASSWORD 'change-me' CREATEDB;
+CREATE DATABASE nextchapter_dev  OWNER nextchapter;
+CREATE DATABASE nextchapter_test OWNER nextchapter;
+CREATE DATABASE nextchapter_e2e  OWNER nextchapter;
 SQL
 
 # 2. Configuration
@@ -68,16 +68,33 @@ npm run dev                 # http://localhost:3000
 
 ---
 
+## Checking it yourself (about 15 minutes)
+
+For a quick look without an AI key, put `AI_PROVIDER="mock"`, `ENABLE_DEMO_TOOLS="true"` and `ENABLE_TEST_CLOCK="true"` in `.env`, restart `npm run dev`, and create an account at http://localhost:3000.
+
+1. **Onboarding → Today.** Answer a few questions; Today shows one next action.
+2. **Learn.** Add a subject, choose *Paste text*, paste a syllabus (e.g. `tests/fixtures/sample-syllabus.txt`), check and correct what was found, then confirm. Open *Materials*, upload some notes, open a topic: the lesson cites your notes. Click a source number to see the exact passage. Try *Practice*, *Flashcards* and *Revise* (adds a revision to the calendar).
+3. **Calendar.** Type “Chemistry test on 23/10 at 10am” or “coaching every Mon and Wed 5–7pm” into the box at the top; open *Plan my week*.
+4. **My Journal.** Check in, then write a reflection. It stays private from the AI unless you turn on journal access in *Settings → Privacy* **and** mark the entry.
+5. **Settings → Developer → Load demonstration history.** Then visit *Goals & Career → Career* for the three-month discovery review, and *My Progress* for charts, badges and the Kadamba tree. Demo items carry a “Demo data” badge.
+6. **Goals & Career → Opportunities.** Browse the official directory, *Add a link* with pasted posting text, *Check my fit*, turn a gap into a plan, track the application, practise interview questions.
+7. **Portfolio → CV.** Add an achievement with an evidence link, approve it, build a CV tailored to the opportunity, print or download it.
+8. **Community.** Join with a handle, post in a group, open the same group in a private window as a second student to answer it, mark it helpful, try reporting and blocking. *Settings → Developer* can make you a moderator to see the moderation queue.
+9. **Companion** (button on every page). Ask “help me plan my week” and click a suggested action.
+10. **Phone view.** Open the browser’s device toolbar (or your phone on the same network) — every page is built for small screens.
+
+**Settings → Integrations** lists what is live, simulated or not configured. Running all automated checks takes about 10 minutes: `npm run lint && npm run typecheck && npm test && npm run test:e2e`.
+
 ## Integrations
 
 | Integration | Setting(s) | Without it |
 |---|---|---|
 | **Claude** (lessons with citations, extraction, practice, feedback, companion, reviews, career review, gap analysis, CV tailoring, opportunity reading, OCR via vision) | `ANTHROPIC_API_KEY`; `ANTHROPIC_MODEL` (default `claude-opus-5-5`); `AI_DAILY_REQUEST_LIMIT` per student per day | Rule-based fallbacks everywhere, clearly labelled |
 | **Web search for resources** | `AI_WEB_SEARCH_ENABLED=true` (uses Claude’s server-side web search) | Trusted directory with search links, plus your own links |
-| **Google sign-in and Google Calendar** | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `APP_ENCRYPTION_KEY`. Enable the Google Calendar API and register both redirect URIs listed in `.env.example`. Least-privilege scopes: `calendar.app.created` (Kadam’s own “Kadam — study plan” calendar) and `calendar.freebusy` (busy times only). | Built-in calendar, planner, reminders and `.ics` export |
+| **Google sign-in and Google Calendar** | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `APP_ENCRYPTION_KEY`. Enable the Google Calendar API and register both redirect URIs listed in `.env.example`. Least-privilege scopes: `calendar.app.created` (NextChapter’s own “NextChapter — study plan” calendar) and `calendar.freebusy` (busy times only). | Built-in calendar, planner, reminders and `.ics` export |
 | **Transcription** (audio/video materials, voice notes) | `TRANSCRIPTION_API_URL`, `TRANSCRIPTION_API_KEY`, `TRANSCRIPTION_MODEL` (any OpenAI-compatible `/audio/transcriptions`) | Upload `.vtt` or `.srt` captions alongside media |
 | **Local OCR** | `OCR_LOCAL_ENABLED=true` (Tesseract, English) | Paste text, or correct it in the review step |
-| **Opportunity feeds** | `OPPORTUNITY_FEEDS`: a JSON list of RSS, Atom or JSON feeds you’re **permitted** to use | Official directory and saved links (Kadam never scrapes) |
+| **Opportunity feeds** | `OPPORTUNITY_FEEDS`: a JSON list of RSS, Atom or JSON feeds you’re **permitted** to use | Official directory and saved links (NextChapter never scrapes) |
 
 Uploads are stored privately under `STORAGE_DIR` and served only to their owner (`MAX_UPLOAD_MB`, `MAX_MEDIA_UPLOAD_MB`).
 

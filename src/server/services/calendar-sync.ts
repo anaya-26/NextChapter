@@ -19,7 +19,7 @@ import {
 } from "../integrations/google-calendar";
 
 /**
- * Two-way sync between Kadam and a separate "Kadam — study plan" calendar in the student's
+ * Two-way sync between NextChapter and a separate "NextChapter — study plan" calendar in the student's
  * Google account. Nothing is written in either direction without a previewed change the
  * student approves; conflicts are shown side by side. Busy times from the student's main
  * calendar are read (free/busy only) so plans avoid them.
@@ -73,7 +73,7 @@ export async function completeConnection(userId: string, code: string, at: Date)
   const tokens = await googleOAuth().exchangeCode(code);
   if (!tokens.scopes.includes(SCOPE_APP_CREATED)) {
     await googleOAuth().revoke(tokens.accessToken);
-    throw new Error("Kadam needs permission to manage its own study calendar. Please try again and allow it.");
+    throw new Error("NextChapter needs permission to manage its own study calendar. Please try again and allow it.");
   }
   const profile = await prisma.studentProfile.findUniqueOrThrow({ where: { userId } });
   const existing = await getConnection(userId);
@@ -90,7 +90,7 @@ export async function completeConnection(userId: string, code: string, at: Date)
     ? await prisma.calendarConnection.update({ where: { userId }, data })
     : await prisma.calendarConnection.create({ data: { userId, provider: "google", ...data } });
   if (!conn.studyCalendarId) {
-    const calendar = await apiFor(conn).createCalendar("Kadam — study plan", profile.timezone);
+    const calendar = await apiFor(conn).createCalendar("NextChapter — study plan", profile.timezone);
     conn = await prisma.calendarConnection.update({ where: { id: conn.id }, data: { studyCalendarId: calendar.id } });
   }
   await queuePushChanges(userId, at);
@@ -126,20 +126,20 @@ export async function disconnect(userId: string, opts: { deleteGoogleCalendar: b
   return true;
 }
 
-/* ── Push (Kadam → Google) ────────────────────────────────────────── */
+/* ── Push (NextChapter → Google) ────────────────────────────────────────── */
 
 function toGoogle(e: CalendarEvent): GoogleEventInput {
   const time = (d: Date): { dateTime?: string; date?: string; timeZone?: string } =>
     e.allDay ? { date: localDateKey(d, e.timezone) } : { dateTime: d.toISOString(), timeZone: e.timezone };
   return {
     summary: e.title,
-    description: [e.description, "Planned with Kadam."].filter(Boolean).join("\n\n"),
+    description: [e.description, "Planned with NextChapter."].filter(Boolean).join("\n\n"),
     location: e.location ?? undefined,
     start: time(e.startAt),
     end: time(e.endAt),
     recurrence: e.rrule ? [`RRULE:${e.rrule}`] : undefined,
     reminders: e.reminderMinutes.length ? { useDefault: false, overrides: e.reminderMinutes.slice(0, 5).map((m) => ({ method: "popup", minutes: m })) } : { useDefault: false },
-    extendedProperties: { private: { kadamId: e.id } },
+    extendedProperties: { private: { nextChapterId: e.id } },
   };
 }
 
@@ -151,7 +151,7 @@ function wantsSync(conn: CalendarConnection, e: CalendarEvent) {
   return conn.status === "ACTIVE" && !e.syncOptOut && conn.syncKinds.includes(e.kind) && e.source !== "GOOGLE";
 }
 
-/** Proposes (but does not apply) Google changes for events that are new or changed in Kadam. */
+/** Proposes (but does not apply) Google changes for events that are new or changed in NextChapter. */
 export async function queuePushChanges(userId: string, at: Date) {
   const conn = await getConnection(userId);
   if (!conn || conn.status !== "ACTIVE") return 0;
@@ -209,13 +209,13 @@ export async function beforeLocalEventDelete(userId: string, e: CalendarEvent) {
   });
 }
 
-/* ── Pull (Google → Kadam) ────────────────────────────────────────── */
+/* ── Pull (Google → NextChapter) ────────────────────────────────────────── */
 
 function fromGoogleTime(t: { dateTime?: string; date?: string }, tz: string) {
   return t.dateTime ? new Date(t.dateTime) : zonedToUtc(t.date!, "00:00", tz);
 }
 
-/** Reads changes made in the Kadam calendar inside Google and proposes them for approval. */
+/** Reads changes made in the NextChapter calendar inside Google and proposes them for approval. */
 export async function pullRemote(userId: string, at: Date) {
   const conn = await getConnection(userId);
   if (!conn?.studyCalendarId || conn.status !== "ACTIVE") return 0;
@@ -229,7 +229,7 @@ export async function pullRemote(userId: string, at: Date) {
   }
   let proposed = 0;
   for (const item of changes.items) {
-    const local = await prisma.calendarEvent.findFirst({ where: { userId, OR: [{ externalId: item.id }, ...(item.extendedProperties?.private?.kadamId ? [{ id: item.extendedProperties.private.kadamId }] : [])] } });
+    const local = await prisma.calendarEvent.findFirst({ where: { userId, OR: [{ externalId: item.id }, ...(item.extendedProperties?.private?.nextChapterId ? [{ id: item.extendedProperties.private.nextChapterId }] : [])] } });
     if (local && local.externalEtag === item.etag) continue;
     const already = await prisma.calendarChange.findFirst({ where: { connectionId: conn.id, direction: "PULL", status: { in: ["PENDING", "CONFLICT"] }, payload: { path: ["googleId"], equals: item.id } } });
     if (already) continue;
@@ -252,7 +252,7 @@ export async function pullRemote(userId: string, at: Date) {
           summary: `Changed in Google: “${item.summary ?? local.title}” · ${when}`,
           payload,
           status: localChanged ? "CONFLICT" : "PENDING",
-          conflictDetail: localChanged ? ({ kadam: { title: local.title, startAt: local.startAt.toISOString(), endAt: local.endAt.toISOString() }, google: payload } as Prisma.InputJsonValue) : undefined,
+          conflictDetail: localChanged ? ({ app: { title: local.title, startAt: local.startAt.toISOString(), endAt: local.endAt.toISOString() }, google: payload } as Prisma.InputJsonValue) : undefined,
         },
       });
       if (localChanged) await prisma.calendarEvent.update({ where: { id: local.id }, data: { syncState: "CONFLICT" } });
@@ -359,7 +359,7 @@ export async function applyChanges(userId: string, ids: string[] | "all", at: Da
           data: {
             status: "CONFLICT",
             conflictDetail: {
-              kadam: { title: c.event.title, startAt: c.event.startAt.toISOString(), endAt: c.event.endAt.toISOString() },
+              app: { title: c.event.title, startAt: c.event.startAt.toISOString(), endAt: c.event.endAt.toISOString() },
               google: remote ? { title: remote.summary, startAt: remote.start?.dateTime ?? remote.start?.date ?? null, endAt: remote.end?.dateTime ?? remote.end?.date ?? null, etag: remote.etag } : null,
             } as Prisma.InputJsonValue,
           },
@@ -375,7 +375,7 @@ export async function applyChanges(userId: string, ids: string[] | "all", at: Da
   return result;
 }
 
-/** Declines a proposed change; Kadam won't propose the same thing again. */
+/** Declines a proposed change; NextChapter won't propose the same thing again. */
 export async function rejectChange(userId: string, changeId: string, at: Date) {
   const c = await prisma.calendarChange.findFirst({ where: { id: changeId, userId, status: { in: ["PENDING", "FAILED", "CONFLICT"] } }, include: { event: true } });
   if (!c) return false;
@@ -387,13 +387,13 @@ export async function rejectChange(userId: string, changeId: string, at: Date) {
   return true;
 }
 
-/** Resolves a conflict by keeping either the Kadam or the Google version. */
-export async function resolveConflict(userId: string, changeId: string, keep: "kadam" | "google", at: Date) {
+/** Resolves a conflict by keeping either the NextChapter or the Google version. */
+export async function resolveConflict(userId: string, changeId: string, keep: "app" | "google", at: Date) {
   const c = await prisma.calendarChange.findFirst({ where: { id: changeId, userId, status: "CONFLICT" }, include: { event: true } });
   const conn = await getConnection(userId);
   if (!c?.event || !conn?.studyCalendarId) return false;
   const api = apiFor(conn);
-  if (keep === "kadam") {
+  if (keep === "app") {
     const g = c.event.externalId
       ? await api.patchEvent(conn.studyCalendarId, c.event.externalId, toGoogle(c.event), null)
       : await api.insertEvent(conn.studyCalendarId, toGoogle(c.event));

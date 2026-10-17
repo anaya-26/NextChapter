@@ -27,7 +27,7 @@ export default async function CommunityPage(props: PageProps<"/community">) {
       <div className="flex flex-col gap-6">
         <PageHeader title="Community" description="Study groups, focus rooms and peer explanations." />
         <Notice tone="info" title="Ask a parent or guardian first">
-          Because you’re under 18, the community opens once a parent or guardian’s consent is recorded in <Link href="/settings/privacy">Settings → Privacy</Link>. Everything else in Kadam works without it.
+          Because you’re under 18, the community opens once a parent or guardian’s consent is recorded in <Link href="/settings/privacy">Settings → Privacy</Link>. Everything else in NextChapter works without it.
         </Notice>
       </div>
     );

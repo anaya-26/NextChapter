@@ -16,7 +16,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
     <div className="flex min-h-dvh">
       <SkipLink label={t("skipToContent")} />
       <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-border bg-surface px-3 py-4 lg:flex print:hidden">
-        <Link href="/today" className="mb-6 px-2" aria-label="Kadam — Today">
+        <Link href="/today" className="mb-6 px-2" aria-label="NextChapter — Today">
           <Logo />
         </Link>
         <SidebarNav />
@@ -24,7 +24,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-border bg-bg/90 px-3 backdrop-blur sm:px-5 print:hidden">
-          <Link href="/today" className="lg:hidden" aria-label="Kadam — Today">
+          <Link href="/today" className="lg:hidden" aria-label="NextChapter — Today">
             <Logo showName={false} />
           </Link>
           <div className="flex-1" />

@@ -101,7 +101,7 @@ export default async function OpportunityPage(props: PageProps<"/goals/opportuni
       </header>
 
       {state === "CLOSED" || opp.verification === "EXPIRED" ? <Notice tone="warning">The deadline has passed. Programmes often reopen — check the official page for the next cycle.</Notice> : null}
-      {opp.verification === "LINK_BROKEN" ? <Notice tone="warning">The source link didn’t open when Kadam last checked. The opening may have been removed — confirm before you spend time on it.</Notice> : null}
+      {opp.verification === "LINK_BROKEN" ? <Notice tone="warning">The source link didn’t open when NextChapter last checked. The opening may have been removed — confirm before you spend time on it.</Notice> : null}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
         <div className="flex flex-col gap-6">
@@ -123,7 +123,7 @@ export default async function OpportunityPage(props: PageProps<"/goals/opportuni
                 <p className="mt-2 whitespace-pre-line rounded-lg bg-surface-2 p-3 text-muted">{opp.description}</p>
               </details>
             ) : null}
-            {opp.sourceType === "DIRECTORY" ? <p className="mt-4 text-xs text-muted">Summary of a recurring programme, written from public information. Kadam hasn’t verified the current cycle — the official page is the source of truth.</p> : null}
+            {opp.sourceType === "DIRECTORY" ? <p className="mt-4 text-xs text-muted">Summary of a recurring programme, written from public information. NextChapter hasn’t verified the current cycle — the official page is the source of truth.</p> : null}
           </Card>
 
           {app ? (

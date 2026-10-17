@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "Kadam",
-    "tagline": "Your study companion — one step at a time",
+    "name": "NextChapter",
+    "tagline": "Your study companion — ready for your next chapter",
     "skipToContent": "Skip to main content"
   },
   "nav": {
@@ -22,7 +22,7 @@
     "account": "Account",
     "signOut": "Sign out",
     "profile": "Profile",
-    "memory": "What Kadam remembers",
+    "memory": "What NextChapter remembers",
     "privacy": "Privacy & AI permissions",
     "integrations": "Integrations & status",
     "theme": "Theme",
@@ -78,7 +78,7 @@
   },
   "landing": {
     "headline": "Know what to learn, why it matters, and what to do next.",
-    "sub": "Upload your syllabus — even a photo — and Kadam builds a roadmap, explains each topic from your own materials, schedules revision, and helps you grow towards your goals.",
+    "sub": "Upload your syllabus — even a photo — and NextChapter builds a roadmap, explains each topic from your own materials, schedules revision, and helps you grow towards your goals.",
     "cta": "Get started — it's free",
     "signIn": "I already have an account",
     "f1Title": "Syllabus to roadmap",

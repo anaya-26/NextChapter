@@ -18,10 +18,10 @@ const devanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Kadam — study companion", template: "%s · Kadam" },
+  title: { default: "NextChapter — study companion", template: "%s · NextChapter" },
   description:
     "An AI study companion for Indian school, college and competitive-exam students: syllabus roadmaps, source-linked learning, planning, reflection and career growth.",
-  applicationName: "Kadam",
+  applicationName: "NextChapter",
 };
 
 export const viewport: Viewport = {
@@ -37,7 +37,7 @@ function BootSplash() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-3" role="status">
       <LogoMark className="size-10 animate-pulse" />
-      <span className="sr-only">Loading Kadam…</span>
+      <span className="sr-only">Loading NextChapter…</span>
     </div>
   );
 }

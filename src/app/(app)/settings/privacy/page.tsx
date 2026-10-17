@@ -50,7 +50,7 @@ export default async function PrivacyPage() {
           ) : (
             <>
               <p className="mb-3 text-sm text-muted">
-                India&apos;s Digital Personal Data Protection Act treats everyone under 18 as a child. Until a parent or guardian consents, Kadam keeps optional
+                India&apos;s Digital Personal Data Protection Act treats everyone under 18 as a child. Until a parent or guardian consents, NextChapter keeps optional
                 features off: noticing behaviour patterns and being discoverable to other students. Learning tools, your private journal and planning work as normal.
               </p>
               <Notice tone="warning" className="mb-4" title="This records a declaration, not verified consent">

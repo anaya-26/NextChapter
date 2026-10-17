@@ -24,7 +24,7 @@ function getRecognition(): SpeechRecognitionLike | null {
   return Ctor ? new Ctor() : null;
 }
 
-export const DICTATION_NOTE = "Voice input uses your browser’s speech service (in Chrome, audio goes to Google to be transcribed). Typing keeps everything within Kadam.";
+export const DICTATION_NOTE = "Voice input uses your browser’s speech service (in Chrome, audio goes to Google to be transcribed). Typing keeps everything within NextChapter.";
 
 /** Browser dictation into a text field. Falls back to a friendly message where unsupported. */
 export function DictateButton({ lang, onText, className }: { lang: string; onText: (text: string) => void; className?: string }) {

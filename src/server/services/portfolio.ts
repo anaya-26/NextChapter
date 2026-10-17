@@ -150,7 +150,7 @@ export async function deleteAchievement(userId: string, id: string) {
   return true;
 }
 
-/** Things the student did elsewhere in Kadam that might belong in the portfolio (drafts only). */
+/** Things the student did elsewhere in NextChapter that might belong in the portfolio (drafts only). */
 export async function achievementSuggestions(userId: string) {
   const [explorations, existing, journal] = await Promise.all([
     prisma.explorationProject.findMany({ where: { userId, status: "COMPLETED" }, orderBy: { updatedAt: "desc" }, take: 5 }),

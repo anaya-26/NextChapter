@@ -7,7 +7,7 @@ import { MemoryList, AddMemoryForm, ForgetEverything } from "@/components/settin
 import { Card } from "@/components/ui/card";
 import { Notice, PageHeader, SectionTitle } from "@/components/ui/feedback";
 
-export const metadata: Metadata = { title: "What Kadam remembers" };
+export const metadata: Metadata = { title: "What NextChapter remembers" };
 
 export default async function MemoryPage() {
   const user = await requireUser();
@@ -16,7 +16,7 @@ export default async function MemoryPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="What Kadam remembers"
+        title="What NextChapter remembers"
         description="Everything the companion uses to personalise help. Confirm what's right, correct what isn't, and delete anything — deletions take effect immediately."
       />
 
@@ -44,7 +44,7 @@ export default async function MemoryPage() {
       </Card>
 
       <Card className="p-5 sm:p-6">
-        <SectionTitle>Tell Kadam something to remember</SectionTitle>
+        <SectionTitle>Tell NextChapter something to remember</SectionTitle>
         <AddMemoryForm />
       </Card>
 
