@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { BookCheck, Bookmark, BookmarkCheck, Download, Eye, EyeOff, Pencil, RefreshCcw, Search, Sparkles, Trash2, X } from "lucide-react";
+import { BookCheck, Bookmark, BookmarkCheck, Download, Eye, EyeOff, Pencil, RefreshCcw, Search, Sparkles, Trash2, X, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   completeRevisionAction,
@@ -77,7 +78,7 @@ export function NoteEditor({ topicId, note, onDone }: { topicId: string; note?: 
   const [preview, setPreview] = useState(false);
   const [content, setContent] = useState(note?.content ?? "");
   return (
-    <ActionForm action={saveNoteAction.bind(null, topicId, note?.id ?? null)} onSuccess={onDone} resetOnSuccess={!note} className="flex flex-col gap-3">
+    <ActionForm action={saveNoteAction.bind(null, topicId, note?.id ?? null)} onSuccess={onDone} className="flex flex-col gap-3">
       <Field label="Title" htmlFor={`nt-${note?.id ?? "new"}`}>
         <Input id={`nt-${note?.id ?? "new"}`} name="title" defaultValue={note?.title ?? ""} required maxLength={160} />
         <FieldError name="title" />
@@ -145,6 +146,11 @@ export function NoteCard({ topicId, note }: { topicId: string; note: NoteView })
           <Button size="icon-sm" variant="ghost" aria-label="Edit note" onClick={() => setEditing(true)}>
             <Pencil />
           </Button>
+          <Button asChild size="icon-sm" variant="ghost" aria-label="Share as an explanation in the community">
+            <Link href={`/community/new?share=note:${note.id}`}>
+              <Share2 />
+            </Link>
+          </Button>
           <Button size="icon-sm" variant="ghost" aria-label="Download note as Markdown" onClick={download}>
             <Download />
           </Button>
@@ -183,7 +189,7 @@ export function DraftNoteButton({ topicId }: { topicId: string }) {
 
 export function CardForm({ topicId }: { topicId: string }) {
   return (
-    <ActionForm action={createCardAction.bind(null, topicId)} resetOnSuccess className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+    <ActionForm action={createCardAction.bind(null, topicId)} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
       <Field label="Front (question)" htmlFor="card-front">
         <Textarea id="card-front" name="front" className="min-h-16" />
       </Field>
@@ -231,7 +237,7 @@ export function PracticeGenerator({ topicId, aiAvailable }: { topicId: string; a
 export function OwnQuestionForm({ topicId }: { topicId: string }) {
   const [type, setType] = useState<"SHORT_ANSWER" | "MCQ" | "NUMERICAL">("SHORT_ANSWER");
   return (
-    <ActionForm action={createQuestionAction.bind(null, topicId)} resetOnSuccess className="flex flex-col gap-3">
+    <ActionForm action={createQuestionAction.bind(null, topicId)} className="flex flex-col gap-3">
       <Field label="Type" htmlFor="oq-type">
         <Select id="oq-type" name="type" value={type} onChange={(e) => setType(e.target.value as typeof type)} className="w-56">
           <option value="SHORT_ANSWER">Short answer</option>
@@ -332,7 +338,7 @@ export function ResourceFlags({ id, saved }: { id: string; saved: boolean }) {
 
 export function AddResourceForm({ topicId, subjectId }: { topicId: string | null; subjectId: string | null }) {
   return (
-    <ActionForm action={addResourceAction.bind(null, topicId, subjectId)} resetOnSuccess className="grid grid-cols-1 gap-2 sm:grid-cols-[1.4fr_1fr_auto_auto] sm:items-end">
+    <ActionForm action={addResourceAction.bind(null, topicId, subjectId)} className="grid grid-cols-1 gap-2 sm:grid-cols-[1.4fr_1fr_auto_auto] sm:items-end">
       <Field label="Link" htmlFor="res-url">
         <Input id="res-url" name="url" type="url" placeholder="https://" required />
         <FieldError name="url" />

@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { clearTestClockAction, setTestClockAction } from "@/app/(app)/settings/actions";
-import { loadDemoHistory, removeDemoHistory } from "@/app/(app)/settings/demo-actions";
+import { loadDemoHistory, removeDemoHistory, toggleModeratorAction } from "@/app/(app)/settings/demo-actions";
 import { ActionForm } from "@/components/forms/action-form";
 import { Button } from "@/components/ui/button";
 import { Field, Input, SubmitButton } from "@/components/ui/form";
@@ -60,5 +60,23 @@ export function DemoDataControls({ loaded }: { loaded: boolean }) {
         </Button>
       ) : null}
     </div>
+  );
+}
+
+export function ModeratorToggle({ on }: { on: boolean }) {
+  const [pending, startTransition] = useTransition();
+  return (
+    <Button
+      variant="outline"
+      disabled={pending}
+      onClick={() =>
+        startTransition(async () => {
+          const res = await toggleModeratorAction(!on);
+          (res.ok ? toast.success : toast.error)(res.message);
+        })
+      }
+    >
+      {on ? "Stop being a moderator" : "Make me a community moderator"}
+    </Button>
   );
 }

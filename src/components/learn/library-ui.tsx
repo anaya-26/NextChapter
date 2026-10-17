@@ -42,7 +42,7 @@ export function MaterialActions({ id, canRetry }: { id: string; canRetry: boolea
 
 export function PasteMaterialForm({ subjectId }: { subjectId: string }) {
   return (
-    <ActionForm action={addPastedMaterialAction.bind(null, subjectId)} resetOnSuccess className="flex flex-col gap-3">
+    <ActionForm action={addPastedMaterialAction.bind(null, subjectId)} className="flex flex-col gap-3">
       <Field label="Title" htmlFor="paste-title">
         <Input id="paste-title" name="title" placeholder="e.g. Class notes — 12 Aug" maxLength={120} />
       </Field>
@@ -310,7 +310,7 @@ export function MistakeActions({ id, resolved, hasCard }: { id: string; resolved
 
 export function AddMistakeForm({ topics, defaultTopicId }: { topics: { id: string; label: string }[]; defaultTopicId?: string }) {
   return (
-    <ActionForm action={addOwnMistakeAction} resetOnSuccess className="flex flex-col gap-3">
+    <ActionForm action={addOwnMistakeAction} className="flex flex-col gap-3">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label="What was it?" htmlFor="mk-title">
           <Input id="mk-title" name="title" placeholder="e.g. Sign of work done by friction" maxLength={160} />

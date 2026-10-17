@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { CalendarClock, CheckCircle2, Circle, MoreHorizontal, Pause, Play, Star, Trash2, Trophy, X } from "lucide-react";
 import { addMilestoneAction, goalStatusAction, makePriority, removeGoal, removeMilestone, saveGoal, toggleMilestoneAction } from "@/app/(app)/goals/actions";
@@ -89,6 +90,9 @@ export function GoalCard({ goal, today, highlight }: { goal: GoalView; today: st
               </DropdownMenuItem>
             ) : null}
             <DropdownMenuItem onSelect={() => setEditing(true)}>Edit</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/community/new?share=goal:${goal.id}`}>Share to community…</Link>
+            </DropdownMenuItem>
             {goal.status !== "ACHIEVED" ? (
               <DropdownMenuItem onSelect={() => startTransition(() => goalStatusAction(goal.id, "ACHIEVED"))}>
                 <Trophy /> Mark achieved
@@ -158,7 +162,7 @@ export function GoalCard({ goal, today, highlight }: { goal: GoalView; today: st
           ))}
         </ul>
         {goal.status === "ACTIVE" ? (
-          <ActionForm action={addMilestoneAction} resetOnSuccess silent className="mt-2 flex gap-2">
+          <ActionForm action={addMilestoneAction} silent className="mt-2 flex gap-2">
             <input type="hidden" name="goalId" value={goal.id} />
             <Input name="title" placeholder="Add a milestone" aria-label="New milestone" className="h-8" maxLength={160} />
             <Input name="dueAt" type="date" aria-label="Milestone due date" className="h-8 w-36" />
@@ -174,7 +178,7 @@ export function GoalCard({ goal, today, highlight }: { goal: GoalView; today: st
 
 export function GoalForm({ initial, onDone }: { initial?: GoalView; onDone?: () => void }) {
   return (
-    <ActionForm action={saveGoal.bind(null, initial?.id ?? null)} resetOnSuccess={!initial} onSuccess={onDone} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <ActionForm action={saveGoal.bind(null, initial?.id ?? null)} onSuccess={onDone} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Field label="Goal" htmlFor={`g-title-${initial?.id ?? "new"}`} className="sm:col-span-2">
         <Input id={`g-title-${initial?.id ?? "new"}`} name="title" defaultValue={initial?.title} placeholder="Specific and achievable" required maxLength={160} />
         <FieldError name="title" />

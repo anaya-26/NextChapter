@@ -56,7 +56,7 @@ Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, exp
 - ✅ Claude web search for readings, videos, OER and PDFs: only URLs the search returned are kept; relevance, difficulty, free/paid shown; link checks with date; unreachable links flagged
 - ✅ Trusted directory (NCERT, DIKSHA, NPTEL, SWAYAM, NDLI, Khan Academy, OpenStax, MIT OCW, YouTube, Wikipedia) works without AI
 - ✅ Save, dismiss and add own links (validated, ownership-checked)
-- ⏳ Community-flagged incorrect resources (Stage 11)
+- ✅ Community-flagged incorrect resources: “incorrect or outdated” flags are counted and shown on resource posts and carried into resources saved from the community
 ## 6. Companion
 - ✅ Available from every page (floating button and nav); opened from a topic, it knows the topic and uses passages from the student’s own materials as reference data, kept apart from its instructions
 - ✅ Streaming replies, each labelled AI / simulated AI / not AI, with a “Used: …” line listing the data categories it drew on — only those allowed in Privacy, and only journal entries the student shared
@@ -122,7 +122,20 @@ Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, exp
 ## 13. XP & visible growth
 - ✅ Understandable XP rules (shown in the app), once per meaningful action, daily caps; levels; badges with how to earn them; recent XP with reasons
 - ✅ Optional Kadamba tree that grows with level; quiet interface hides XP, levels, badges and celebrations while keeping real progress
-## 14. Community — ⏳ Stage 11
+## 14. Community
+- ✅ Optional and pseudonymous: join with a handle (checked for contact details and look-alike numbers); name, email, school, journal, progress and goals are never shown
+- ✅ Under-18s join only after guardian consent is recorded; spaces by age band (all-ages and strictly moderated / 13–17 / 18+); undisclosed age sees all-ages only; students create groups only for their own bracket
+- ✅ Official groups (boards, Class 11–12 science, JEE, NEET, coding, teen circle, first-year college, UPSC, internships) plus student-run groups
+- ✅ Questions, peer explanations, resources (link + attribution required), discussions, goals and showcases; “helpful” marks; PEER_HELP XP once per explanation; notifications for replies
+- ✅ Deliberate sharing of an achievement (approved, not demo), goal, saved resource or own note as an editable copy with attribution; journals can never be shared
+- ✅ Phone numbers, emails and messaging handles are refused; posts showing possible distress are held for a moderator and the author gets support lines
+- ✅ Reports (spam, harassment, incorrect, inappropriate, personal details, someone in danger); auto-hide after 2 reports in all-ages/13–17 spaces and 3 in 18+; “someone in danger” hides at once and reaches out to the author
+- ✅ Moderation queue (distress first) with keep / remove / pause posting for 7 days; decisions recorded and authors told; moderators can’t judge their own content
+- ✅ Blocking hides both students from each other and ends buddy links; leaving deletes everything the student posted
+- ✅ Focus rooms: presence only (handle, goal, shared timer), by audience; joining starts a personal focus session; 30-second refresh, low data
+- ✅ Study buddies: only discoverable students, same age bracket, not under 13; request, accept, decline, end
+- ✅ Rate limits on posts and replies
+- 🟡 Moderators are appointed in the database (a development switch exists in Settings → Developer); no automated toxicity classifier — moderation relies on reports, contact-detail blocking and distress detection
 ## 16. Navigation & design
 - ✅ Six main spaces, calendar always in the header, companion button on every page, mobile bottom bar
 - ✅ Loading skeletons per route, error boundary, empty states, offline notice, Lite mode

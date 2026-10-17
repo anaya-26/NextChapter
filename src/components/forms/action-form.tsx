@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useActionState, useContext, useEffect, useEffectEvent, useRef, type ReactNode } from "react";
+import { createContext, startTransition, useActionState, useContext, useEffect, useEffectEvent, useRef, type ReactNode } from "react";
 import { toast } from "sonner";
 import type { ActionResult } from "@/lib/action";
 import { cn } from "@/lib/utils";
+import { FormPendingContext } from "@/components/ui/form";
 
 type ServerAction = (prev: ActionResult<unknown>, form: FormData) => Promise<ActionResult<unknown>>;
 
@@ -12,12 +13,13 @@ const FormStateContext = createContext<ActionResult<unknown>>({ ok: false });
 /**
  * Form bound to a Server Action via useActionState. Shows toast feedback and makes field
  * errors available to <FieldError name="…" />. Works without JavaScript (progressive enhancement).
+ * With JavaScript, it submits through a transition so a failed submission keeps what the student
+ * typed (React would otherwise reset the form); successful submissions reset as before.
  */
 export function ActionForm({
   action,
   children,
   className,
-  resetOnSuccess = false,
   onSuccess,
   silent = false,
   id,
@@ -25,30 +27,42 @@ export function ActionForm({
   action: ServerAction;
   children: ReactNode;
   className?: string;
-  resetOnSuccess?: boolean;
   onSuccess?: (result: ActionResult<unknown>) => void;
   silent?: boolean;
   id?: string;
 }) {
-  const [state, formAction] = useActionState(action, { ok: false } as ActionResult<unknown>);
+  const [state, formAction, isPending] = useActionState(action, { ok: false } as ActionResult<unknown>);
   const formRef = useRef<HTMLFormElement>(null);
   const notifySuccess = useEffectEvent((result: ActionResult<unknown>) => onSuccess?.(result));
 
   useEffect(() => {
     if (state.ok) {
       if (state.message && !silent) toast.success(state.message);
-      if (resetOnSuccess) formRef.current?.reset();
+      formRef.current?.reset();
       notifySuccess(state);
     } else if (state.message) {
       toast.error(state.message);
     }
-  }, [state, resetOnSuccess, silent]);
+  }, [state, silent]);
 
   return (
     <FormStateContext value={state}>
-      <form ref={formRef} action={formAction} className={className} id={id} noValidate={false}>
-        {children}
-      </form>
+      <FormPendingContext value={isPending}>
+        <form
+          ref={formRef}
+          action={formAction}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const data = new FormData(e.currentTarget, (e.nativeEvent as SubmitEvent).submitter);
+            startTransition(() => formAction(data));
+          }}
+          className={className}
+          id={id}
+          noValidate={false}
+        >
+          {children}
+        </form>
+      </FormPendingContext>
     </FormStateContext>
   );
 }

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, FileText } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Share2 } from "lucide-react";
 import { requireUser } from "@/server/session";
 import { getProfile } from "@/server/services/profile";
 import { ACHIEVEMENT_KINDS, getAchievement, skillsOverview } from "@/server/services/portfolio";
 import { fileIds } from "@/app/(app)/journal/view";
 import { AchievementForm, ApproveButton, DeleteAchievementButton, WithdrawButton } from "@/components/portfolio/portfolio-ui";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DemoBadge, Notice } from "@/components/ui/feedback";
 
@@ -74,6 +75,13 @@ export default async function AchievementPage(props: PageProps<"/goals/portfolio
         ) : null}
         <div className="flex flex-wrap gap-2 border-t border-border pt-3">
           {a.approved ? <WithdrawButton id={a.id} /> : null}
+          {a.approved ? (
+            <Button asChild size="sm" variant="ghost">
+              <Link href={`/community/new?share=achievement:${a.id}`}>
+                <Share2 /> Share to community
+              </Link>
+            </Button>
+          ) : null}
           <DeleteAchievementButton id={a.id} redirectTo="/goals/portfolio" />
         </div>
       </Card>

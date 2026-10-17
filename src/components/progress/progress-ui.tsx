@@ -104,7 +104,7 @@ export function CompleteExperimentForm({ id, ended }: { id: string; ended: boole
 
 export function CustomExperimentForm() {
   return (
-    <ActionForm action={customExperimentAction} resetOnSuccess className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <ActionForm action={customExperimentAction} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Field label="Name" htmlFor="cx-title">
         <Input id="cx-title" name="title" placeholder="e.g. Study at the library" maxLength={120} />
         <FieldError name="title" />

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentProps, ReactNode } from "react";
+import { createContext, useContext, type ComponentProps, type ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 import { Loader2 } from "lucide-react";
 import { Switch as SwitchPrimitive } from "radix-ui";
@@ -86,8 +86,13 @@ export function Switch({
 }
 
 /** Submit button that shows a spinner while its form's Server Action is running. */
+/** Set by ActionForm, which submits through a transition (so useFormStatus alone can't see it). */
+export const FormPendingContext = createContext(false);
+
 export function SubmitButton({ children, pendingLabel, ...props }: ButtonProps & { pendingLabel?: string }) {
-  const { pending } = useFormStatus();
+  const status = useFormStatus();
+  const viaTransition = useContext(FormPendingContext);
+  const pending = status.pending || viaTransition;
   return (
     <Button type="submit" disabled={pending || props.disabled} aria-busy={pending} {...props}>
       {pending ? <Loader2 className="animate-spin" aria-hidden /> : null}

@@ -68,7 +68,7 @@ function AiAccessField({ masterOn, defaultOn = false }: { masterOn: boolean; def
 
 export function CheckInCard({ masterOn }: { masterOn: boolean }) {
   return (
-    <ActionForm action={checkInAction} resetOnSuccess className="flex flex-col gap-3">
+    <ActionForm action={checkInAction} className="flex flex-col gap-3">
       <fieldset className="flex flex-col gap-1.5">
         <legend className="mb-1 text-sm font-medium">How are you feeling today?</legend>
         <ChipRadio name="mood" options={MOODS} required />
@@ -203,7 +203,6 @@ export function EntryForm({ todayKey, prefill, masterOn, topicSuggestions }: { t
   return (
     <ActionForm
       action={createEntryAction}
-      resetOnSuccess
       onSuccess={(r) => {
         const id = (r.data as { id?: string } | undefined)?.id;
         if (id) router.push(`/journal/${id}`);

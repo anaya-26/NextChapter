@@ -74,7 +74,14 @@ export default async function ResourcesPage(props: PageProps<"/learn/resources">
                       {r.linkStatus === "UNREACHABLE" ? <Badge tone="danger">Link didn’t respond</Badge> : null}
                     </div>
                   </div>
-                  <ResourceFlags id={r.id} saved={r.saved} />
+                  <div className="flex flex-col items-end gap-1">
+                    <ResourceFlags id={r.id} saved={r.saved} />
+                    {r.isSearchLink ? null : (
+                      <Link href={`/community/new?share=resource:${r.id}`} className="text-xs text-muted hover:text-fg hover:underline">
+                        Share
+                      </Link>
+                    )}
+                  </div>
                 </div>
               ))}
             </Card>

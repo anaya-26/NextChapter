@@ -238,3 +238,57 @@ export const cvDetailsSchema = z.object({
   educationIds: z.array(z.string()).max(10).default([]),
   skills: list(30, 60),
 });
+
+// ───────────────────────── community ─────────────────────────
+
+export const communityJoinSchema = z.object({
+  handle: text(20).min(3, "Choose a handle"),
+  bio: optionalText(280),
+  agree: z.literal("on", { message: "Please agree to the community guidelines" }),
+});
+
+export const communityProfileSchema = z.object({ handle: text(20).min(3), bio: optionalText(280) });
+
+export const groupCreateSchema = z.object({
+  name: text(80).min(3, "Name the group"),
+  description: text(400).min(10, "Say what the group is for"),
+  kind: z.enum(["SUBJECT", "COURSE", "EXAM", "PROJECT", "CAREER", "GENERAL"]),
+});
+
+export const postSchema = z.object({
+  groupId: z.string().min(1, "Choose a group"),
+  kind: z.enum(["QUESTION", "RESOURCE", "EXPLANATION", "GOAL", "ACHIEVEMENT", "SHOWCASE", "DISCUSSION"]),
+  title: text(160).min(4, "Add a short title"),
+  body: text(8000).min(4, "Write a little more"),
+  resourceUrl: optionalText(500),
+  attribution: optionalText(200),
+  sharedFromType: z
+    .union([z.enum(["achievement", "goal", "resource", "note"]), z.literal("")])
+    .optional()
+    .transform((v) => (v ? v : null)),
+  sharedFromId: optionalText(40),
+});
+
+export const commentSchema = z.object({
+  body: text(6000).min(2, "Write your reply"),
+  isExplanation: z.coerce.boolean().default(false),
+  attribution: optionalText(200),
+});
+
+export const reportSchema = z.object({
+  targetType: z.enum(["POST", "COMMENT", "USER", "RESOURCE"]),
+  targetId: z.string().min(1),
+  reason: z.enum(["SPAM", "HARASSMENT", "INCORRECT", "INAPPROPRIATE", "SELF_HARM", "PRIVACY", "OTHER"]),
+  details: optionalText(500),
+});
+
+export const roomSchema = z.object({
+  title: text(80).min(3, "Name the room"),
+  when: z.enum(["now", "later"]),
+  date: z.string().optional(),
+  time: z.string().optional(),
+  durationMinutes: z.coerce.number().int().min(15).max(180),
+  groupId: optionalText(40),
+});
+
+export const buddyMessageSchema = z.object({ message: optionalText(280) });

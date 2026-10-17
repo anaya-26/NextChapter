@@ -65,7 +65,7 @@ export function TopicActions({ id, title, kind, skipped, canDelete }: { id: stri
 
 export function AddTopicForm({ syllabusId, units }: { syllabusId: string; units: { id: string; title: string }[] }) {
   return (
-    <ActionForm action={addTopicAction.bind(null, syllabusId)} resetOnSuccess className="flex flex-col gap-2 sm:flex-row sm:items-start">
+    <ActionForm action={addTopicAction.bind(null, syllabusId)} className="flex flex-col gap-2 sm:flex-row sm:items-start">
       <div className="flex-1">
         <Input name="title" aria-label="Topic to add" placeholder="e.g. Vectors refresher" maxLength={200} />
         <FieldError name="title" />

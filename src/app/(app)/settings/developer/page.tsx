@@ -4,7 +4,8 @@ import { requireUser } from "@/server/session";
 import { env } from "@/server/env";
 import { getTestClock } from "@/server/clock";
 import { getProfile } from "@/server/services/profile";
-import { TestClockForm, DemoDataControls } from "@/components/settings/developer-ui";
+import { TestClockForm, DemoDataControls, ModeratorToggle } from "@/components/settings/developer-ui";
+import { prisma } from "@/server/db";
 import { Card } from "@/components/ui/card";
 import { Notice, PageHeader, SectionTitle } from "@/components/ui/feedback";
 import { formatInTz, localDateKey, localTimeKey } from "@/lib/time";
@@ -47,6 +48,13 @@ export default async function DeveloperPage() {
             evidence-based career discovery review without waiting. Every demo record shows a “Demo data” badge and can be removed in one click.
           </p>
           <DemoDataControls loaded={!!profile.demoDataLoadedAt} />
+        </Card>
+      ) : null}
+      {e.ENABLE_DEMO_TOOLS ? (
+        <Card className="p-5">
+          <SectionTitle>Community moderation</SectionTitle>
+          <p className="mb-3 text-sm text-muted">Try the moderation queue. In production, moderators are appointed by an administrator (set <code>isModerator</code> on a community profile).</p>
+          <ModeratorToggle on={!!(await prisma.communityProfile.findUnique({ where: { userId: profile.userId }, select: { isModerator: true } }))?.isModerator} />
         </Card>
       ) : null}
     </div>
