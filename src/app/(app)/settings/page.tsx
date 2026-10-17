@@ -58,7 +58,7 @@ export default async function SettingsPage() {
 
       <ProfileSections profile={toProfileInit(profile, user.name)} privacy={{ aiUseJournal: privacy.aiUseJournal, aiInferPatterns: privacy.aiInferPatterns }} />
 
-      <Card className="p-5 sm:p-6">
+      <Card id="commitments" className="scroll-mt-20 p-5 sm:p-6">
         <SectionTitle>Regular commitments</SectionTitle>
         <p className="mb-4 text-sm text-muted">Classes, coaching, commute and responsibilities — the planner only schedules study in genuinely free time.</p>
         <CommitmentList commitments={commitments} />

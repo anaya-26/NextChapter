@@ -9,6 +9,7 @@ const APP_PREFIXES = [
   "/today",
   "/learn",
   "/calendar",
+  "/study",
   "/journal",
   "/goals",
   "/community",

@@ -2,7 +2,7 @@ import "server-only";
 import { hostname } from "node:os";
 import type { Job } from "@/generated/prisma/client";
 import { prisma } from "../db";
-import { claimNextJob, completeJob, failJob, releaseStaleJobs, reportProgress } from "./queue";
+import { claimNextJob, completeJob, enqueueJob, failJob, releaseStaleJobs, reportProgress } from "./queue";
 import { jobHandlers } from "./handlers";
 
 export type JobContext = {
@@ -61,6 +61,7 @@ export async function startWorkerLoop(opts: { pollMs?: number; signal?: AbortSig
   const pollMs = opts.pollMs ?? 1500;
   let lastBeat = 0;
   let lastStaleCheck = 0;
+  let lastTick = 0;
   while (!opts.signal?.aborted) {
     try {
       const now = Date.now();
@@ -71,6 +72,11 @@ export async function startWorkerLoop(opts: { pollMs?: number; signal?: AbortSig
       if (now - lastStaleCheck > 5 * 60_000) {
         await releaseStaleJobs();
         lastStaleCheck = now;
+      }
+      if (now - lastTick > 60_000) {
+        // One reminders job per minute across all workers (deduplicated while queued or running).
+        await enqueueJob("reminders.dispatch", {}, { dedupeKey: "reminders:tick", maxAttempts: 1 });
+        lastTick = now;
       }
       const job = await claimNextJob(workerId);
       if (job) {

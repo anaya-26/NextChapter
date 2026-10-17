@@ -15,12 +15,13 @@ import { env } from "./env";
 
 const SAFE_EXT = /^[a-z0-9]{1,8}$/;
 
+// Storage paths are runtime data, not source files: keep the bundler from tracing them.
 function root(): string {
-  return path.resolve(process.cwd(), env().STORAGE_DIR);
+  return path.resolve(/*turbopackIgnore: true*/ process.cwd(), env().STORAGE_DIR);
 }
 
 function resolveKey(key: string): string {
-  const full = path.resolve(root(), key);
+  const full = path.resolve(/*turbopackIgnore: true*/ root(), key);
   if (!full.startsWith(root() + path.sep)) throw new Error("Invalid storage key");
   return full;
 }

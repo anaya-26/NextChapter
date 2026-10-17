@@ -2,7 +2,7 @@
 
 Legend: ✅ done and tested · 🟡 partial / works with limitations · ⏳ planned in a later stage · 🔌 needs an external credential to go live
 
-Last updated: Stage 3 (topic workspace, resources & coverage).
+Last updated: Stage 4 (calendar, planner, restart, reminders, Google Calendar).
 
 ## Foundation
 - ✅ Next.js 16.4 App Router (Cache Components + Partial Prefetching), TypeScript, Tailwind v4 design tokens (light/dark, Lite mode)
@@ -23,7 +23,7 @@ Last updated: Stage 3 (topic workspace, resources & coverage).
 - ✅ Clear vs exploring career direction
 - ✅ Memory: view / confirm / correct / delete; tentative inferences; journal-derived memories removed on revocation
 - ✅ Permission-aware AI context with "what was used" list
-- ⏳ Missed-session obstacle discussion (Stage 4–5)
+- ✅ Repeated missed sessions (same time of day) → tentative pattern (only if inference is allowed) → obstacle discussion → plan adjusted (move, shorten or keep); the student’s answer becomes an editable memory
 
 ## 3. Syllabus upload & roadmap
 - ✅ Photos/screenshots (Claude vision, or 🟡 offline Tesseract OCR en/hi/mr), PDFs (text + scanned detection), DOCX, pasted text
@@ -57,7 +57,18 @@ Last updated: Stage 3 (topic workspace, resources & coverage).
 - ✅ Save, dismiss and add own links (validated, ownership-checked)
 - ⏳ Community-flagged incorrect resources (Stage 11)
 ## 6. Companion — ⏳ Stage 7
-## 7. Calendar & time management — ⏳ Stage 4
+## 7. Calendar & time management
+- ✅ Week grid (desktop) and agenda (phone): classes, assignments, exams, revision, projects, focus, applications, personal, reminders; regular commitments and Google busy blocks shown alongside
+- ✅ Events with repeats (daily/weekly, until), reminders, countdowns, deadlines that don’t block time, places and notes; edit, delete, mark done
+- ✅ Natural-language quick add (“Chemistry test on 23/10 at 10am”, “coaching every Mon and Wed 5–7pm”, “kal shaam 7 baje”): Claude when configured, else rules (day-first dates, Hindi/Marathi time words); always a reviewed draft with assumptions and clash warnings
+- ✅ Time zones: Asia/Kolkata by default, per-student setting; repeats keep local time across DST
+- ✅ Planner: next roadmap topics, deadline work and exam revision vs free time (commitments, events, busy blocks, 10-min buffers, breaks, daily limit from the weekly target, preferred times); estimates adapt to the student’s measured pace; when it doesn’t fit, concrete choices with their effect (more time, quick review, two weeks, deadlines first); nothing saved until the student agrees
+- ✅ Study sessions: start, focus timer, finish with actual minutes, what went well/difficult, optional energy; planned vs actual; unplanned study log; XP once per session
+- ✅ Restart flow (fresh start, catch up gradually, exams first) with a lighter first three days and respread revisions
+- ✅ In-app reminders, exam/deadline countdowns (7/3/1 days), reminder frequency, quiet hours; 🔌 phone push/email not integrated
+- ✅ .ics export for any calendar app
+- 🔌 Google Calendar (needs GOOGLE_CLIENT_ID/SECRET): least-privilege scopes (calendar.app.created + calendar.freebusy), separate “Kadam — study plan” calendar, every change previewed and approved, conflicts resolved side by side, choice of what to copy, encrypted tokens, disconnect (optionally deleting the calendar) — tested against an in-memory Google double
+- ✅ Today: one clear start action, up to three priorities, due revisions and flashcards, countdowns, this week’s planned vs done, quick focus, study log, restart and obstacle prompts, welcome-back celebration
 ## 8. Journal & study log — ⏳ Stage 5
 ## 9. Progress & experiments — 🟡 XP ledger done; views ⏳ Stage 6
 ## 10. Goals & career discovery — 🟡 goals, milestones, priority, career interests done; discovery review ⏳ Stage 8

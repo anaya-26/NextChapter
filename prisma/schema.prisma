@@ -985,7 +985,10 @@ model StudySession {
   subjectId       String?
   subject         Subject?       @relation(fields: [subjectId], references: [id], onDelete: SetNull)
   calendarEventId String?        @unique
-  calendarEvent   CalendarEvent? @relation(fields: [calendarEventId], references: [id], onDelete: SetNull)
+  calendarEvent   CalendarEvent? @relation("SessionEvent", fields: [calendarEventId], references: [id], onDelete: SetNull)
+  /// The deadline or exam this session works towards (e.g. an assignment)
+  targetEventId   String?
+  targetEvent     CalendarEvent? @relation("SessionTarget", fields: [targetEventId], references: [id], onDelete: SetNull)
   experimentId    String?
   experiment      Experiment?    @relation(fields: [experimentId], references: [id], onDelete: SetNull)
   focusRoomId     String?
@@ -1121,8 +1124,11 @@ model CalendarEvent {
   isDemo            Boolean          @default(false)
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
+  /// The student chose not to copy this event to Google Calendar
+  syncOptOut        Boolean          @default(false)
   revisionTask      RevisionTask?
-  studySession      StudySession?
+  studySession      StudySession?    @relation("SessionEvent")
+  targetedSessions  StudySession[]   @relation("SessionTarget")
   milestones        Milestone[]
   changes           CalendarChange[]
 
@@ -1148,6 +1154,8 @@ model CalendarConnection {
   refreshTokenEnc String?
   tokenExpiresAt  DateTime?
   studyCalendarId String?
+  /// Kinds of Kadam events offered for copying to the Kadam calendar in Google
+  syncKinds       EventKind[]      @default([REVISION, STUDY, EXAM, ASSIGNMENT])
   readBusy        Boolean          @default(false)
   importEvents    Boolean          @default(false)
   syncToken       String?

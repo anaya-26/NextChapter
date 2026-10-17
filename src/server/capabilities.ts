@@ -115,9 +115,9 @@ export async function getCapabilities(): Promise<Capability[]> {
       id: "notifications",
       name: "Reminders & notifications",
       state: "limited",
-      summary: "In-app reminders and notifications.",
-      fallback: "Email, SMS and push notifications are not yet integrated.",
-      setup: "Planned: web push (VAPID) and email provider integration.",
+      summary: "In-app reminders for events, revisions and planned sessions, exam/deadline countdowns (7, 3 and 1 days), quiet hours 10:30 pm–6:30 am, and your chosen frequency. Needs the background worker.",
+      fallback: "Phone push, email and SMS aren't integrated; export the calendar (.ics) or connect Google Calendar to get reminders from your phone's calendar app.",
+      setup: "Planned: web push (VAPID keys) and an email provider.",
     },
     {
       id: "voice",
