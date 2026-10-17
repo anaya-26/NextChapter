@@ -20,6 +20,7 @@ export type AiFeature =
   | "resource_search"
   | "interview_feedback"
   | "cv_tailor"
+  | "opportunity_extract"
   | "note_draft"
   | "image_read";
 

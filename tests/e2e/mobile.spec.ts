@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { signUp } from "./helpers";
 
-const PAGES = ["/today", "/learn", "/learn/review", "/learn/mistakes", "/calendar", "/calendar/plan", "/calendar/restart", "/calendar/sync", "/journal", "/journal/log", "/journal/review", "/goals", "/goals/career", "/companion", "/progress", "/progress/experiments", "/settings", "/settings/privacy", "/settings/memory", "/settings/integrations", "/notifications"];
+const PAGES = ["/today", "/learn", "/learn/review", "/learn/mistakes", "/calendar", "/calendar/plan", "/calendar/restart", "/calendar/sync", "/journal", "/journal/log", "/journal/review", "/goals", "/goals/career", "/goals/opportunities", "/goals/opportunities?view=saved", "/goals/portfolio", "/goals/portfolio/new", "/goals/cv", "/goals/interview", "/companion", "/progress", "/progress/experiments", "/settings", "/settings/privacy", "/settings/memory", "/settings/integrations", "/notifications"];
 
 test("every main page fits a phone screen without sideways scrolling, and check-in works on mobile", async ({ page }) => {
   test.setTimeout(180_000);

@@ -101,8 +101,24 @@ Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, exp
 - ✅ Explorations (mini projects, simulations described as learning activities, informational interviews, reading): reflection, “more / same / less interested”, XP once
 - ✅ Rule-based review without AI; with AI, Claude refines a draft the app computed from permitted data
 - ✅ Test clock: labelled demonstration history (Settings → Developer) unlocks the full review in tests and demos
-## 11. Opportunities — ⏳ Stage 9
-## 12. Portfolio & CV — ⏳ Stage 10
+## 11. Opportunities & applications
+- ✅ Official directory of recurring Indian programmes and portals (PM Internship Scheme, AICTE, NATS, NAPS, National Scholarship Portal, INSPIRE, HBCSE Olympiads, Smart India Hackathon, NITI Aayog, SRFP, PMRF, NCS, GSoC; Internshala and Unstop as portals only), each with source link, eligibility, education, location, mode, duration, published pay and deadline text; only broadly stable facts, with a pointer to the official page
+- ✅ Ranked by education stage, chosen directions, preferred cities and work mode, with plain reasons; filters for type, mode, other stages and closed openings
+- ✅ Save any posting by link; paste its text and AI (labelled) or the rule-based reader fills in details, never inventing dates or pay; students can correct everything; manual links are private
+- ✅ Link checks (private-network guard, redirects re-checked) record the date; failures to reach a site are never reported as a dead link; closed one-off openings are marked expired; recurring programmes never expire
+- 🔌 Permitted feeds (RSS, Atom, JSON) via `OPPORTUNITY_FEEDS`, refreshed every 6 hours without duplicates; nothing is scraped
+- ✅ Saving adds the deadline to the calendar with a countdown and reminder; application tracker (saved → preparing → applied → interviewing → offer / not selected / withdrawn), notes, CV used, dated next step as a calendar reminder
+- ✅ Fit check: requirements vs approved achievements (shown), studied subjects and listed skills (not counted as shown), eligibility left for the student to confirm; student choices override and survive re-checks; AI version labelled and can’t claim a match without real evidence
+- ✅ A gap becomes a goal with milestones before the deadline and a first work session in the calendar
+- ✅ Interview practice: questions from the opening and approved portfolio; typed or dictated answers; STAR check, strengths, improvements and follow-up (AI labelled, rule-based without AI)
+## 12. Portfolio & CV
+- ✅ Achievements (projects, coursework, internships, research, responsibilities, volunteering, competitions, awards, certificates) with evidence links and private evidence files (PDF/images)
+- ✅ Drafts until the student approves (“accurate, my own work, I can back it up”); editing asks again; XP once and only with evidence
+- ✅ Suggestions from completed explorations and journal “what went well” entries become pre-filled drafts
+- ✅ “Shown vs studied”: skills from approved work vs subjects studied but not yet shown; gaps against chosen directions with starter projects
+- ✅ Education records exactly as stated by the student
+- ✅ CV builder from approved data only: headline, contact line and summary in the student’s words, chosen entries, skills, reorderable sections; preview, print/save as PDF, Markdown and plain-text export
+- ✅ Truthful tailoring: relevant entries and skills first; requirements without evidence listed as “not claimed”; AI rewordings (labelled) only from the achievement’s own text, rejected if they add figures, and applied only when the student accepts
 ## 13. XP & visible growth
 - ✅ Understandable XP rules (shown in the app), once per meaningful action, daily caps; levels; badges with how to earn them; recent XP with reasons
 - ✅ Optional Kadamba tree that grows with level; quiet interface hides XP, levels, badges and celebrations while keeping real progress

@@ -7,7 +7,7 @@ import { enqueueJob } from "./queue";
 import { dispatchAllReminders } from "../services/reminders";
 import { syncNow } from "../services/calendar-sync";
 
-/** Runs every minute (enqueued by the worker loop): reminders, missed sessions, sync scheduling. */
+/** Runs every minute (enqueued by the worker loop): reminders, missed sessions, sync and upkeep scheduling. */
 registerJobHandler("reminders.dispatch", async () => {
   const realNow = new Date();
   const notifications = await dispatchAllReminders();
@@ -19,7 +19,10 @@ registerJobHandler("reminders.dispatch", async () => {
     select: { userId: true },
   });
   for (const c of due) await enqueueJob("calendar.sync", { userId: c.userId }, { userId: c.userId, dedupeKey: `calendar-sync:${c.userId}`, maxAttempts: 2 });
-  await prisma.job.deleteMany({ where: { type: "reminders.dispatch", status: "SUCCEEDED", finishedAt: { lt: new Date(realNow.getTime() - 86400000) } } });
+  // Opportunities: expiry, permitted feeds and link checks every 6 hours.
+  const lastUpkeep = await prisma.job.findFirst({ where: { type: "opportunities.maintain" }, orderBy: { createdAt: "desc" }, select: { createdAt: true } });
+  if (!lastUpkeep || lastUpkeep.createdAt < new Date(realNow.getTime() - 6 * 3600_000)) await enqueueJob("opportunities.maintain", {}, { dedupeKey: "opportunities:maintain", maxAttempts: 1 });
+  await prisma.job.deleteMany({ where: { type: { in: ["reminders.dispatch", "opportunities.check"] }, status: "SUCCEEDED", finishedAt: { lt: new Date(realNow.getTime() - 86400000) } } });
   return { notifications, syncs: due.length };
 });
 

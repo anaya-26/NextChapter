@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowUp, Info, Mic, MicOff, Settings2, Trash2 } from "lucide-react";
+import { ArrowUp, Info, Settings2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { acceptSuggestionAction } from "@/app/(app)/journal/actions";
 import { deleteConversationAction, updateCoachingAction } from "@/app/(app)/companion/actions";
 import { ActionForm } from "@/components/forms/action-form";
+import { DICTATION_NOTE, DictateButton } from "@/components/forms/dictate";
 import { ToneSlider } from "@/components/forms/inputs";
 import { CitedMarkdown, ListenButton } from "@/components/learn/cited-markdown";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { AiLabel } from "@/components/ui/feedback";
 import { Field, Select, SubmitButton, Textarea } from "@/components/ui/form";
 import { Dialog, DialogContent } from "@/components/ui/overlay";
-import { cn, markdownToSpeech } from "@/lib/utils";
+import { markdownToSpeech } from "@/lib/utils";
 
 export type ChatMessage = {
   id: string;
@@ -25,24 +26,6 @@ export type ChatMessage = {
   actions: { id: string; label: string }[];
   pending?: boolean;
 };
-
-type SpeechRecognitionLike = {
-  lang: string;
-  interimResults: boolean;
-  continuous: boolean;
-  start(): void;
-  stop(): void;
-  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
-  onend: (() => void) | null;
-  onerror: (() => void) | null;
-};
-
-function getRecognition(): SpeechRecognitionLike | null {
-  if (typeof window === "undefined") return null;
-  const w = window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike };
-  const Ctor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
-  return Ctor ? new Ctor() : null;
-}
 
 function ActionButtons({ actions }: { actions: { id: string; label: string }[] }) {
   const router = useRouter();
@@ -87,8 +70,6 @@ export function Chat({ conversationId, initial, starters, voiceLang, autoSend }:
   const [messages, setMessages] = useState<ChatMessage[]>(initial);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
-  const [listening, setListening] = useState(false);
-  const recognition = useRef<SpeechRecognitionLike | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
   const sentAuto = useRef(false);
 
@@ -149,27 +130,6 @@ export function Chat({ conversationId, initial, starters, voiceLang, autoSend }:
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- send once on arrival
   }, [autoSend]);
-
-  const toggleMic = () => {
-    if (listening) {
-      recognition.current?.stop();
-      return;
-    }
-    const r = getRecognition();
-    if (!r) {
-      toast.error("Voice input isn’t available in this browser — please type.");
-      return;
-    }
-    r.lang = voiceLang === "hi" ? "hi-IN" : voiceLang === "mr" ? "mr-IN" : "en-IN";
-    r.interimResults = false;
-    r.continuous = false;
-    r.onresult = (e) => setDraft((d) => `${d}${d ? " " : ""}${Array.from(e.results).map((x) => x[0].transcript).join(" ")}`);
-    r.onend = () => setListening(false);
-    r.onerror = () => setListening(false);
-    recognition.current = r;
-    setListening(true);
-    r.start();
-  };
 
   return (
     <div className="flex min-h-[60dvh] flex-col">
@@ -238,14 +198,12 @@ export function Chat({ conversationId, initial, starters, voiceLang, autoSend }:
           rows={1}
           maxLength={4000}
         />
-        <Button type="button" size="icon-sm" variant="ghost" onClick={toggleMic} aria-label={listening ? "Stop voice input" : "Voice input"} aria-pressed={listening} className={cn(listening && "text-danger")}>
-          {listening ? <MicOff /> : <Mic />}
-        </Button>
+        <DictateButton lang={voiceLang} onText={(t) => setDraft((d) => `${d}${d ? " " : ""}${t}`)} />
         <Button type="submit" size="icon-sm" disabled={busy || !draft.trim()} aria-label="Send">
           <ArrowUp />
         </Button>
       </form>
-      <p className="mt-1 text-center text-[11px] text-muted">Voice input uses your browser’s speech service (in Chrome, audio goes to Google to be transcribed). Typing keeps everything within Kadam.</p>
+      <p className="mt-1 text-center text-[11px] text-muted">{DICTATION_NOTE}</p>
     </div>
   );
 }

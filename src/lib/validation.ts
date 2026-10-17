@@ -136,3 +136,105 @@ export const memorySchema = z.object({
   content: text(400).min(3, "Write a short statement"),
   kind: z.enum(["FACT", "PREFERENCE", "GOAL_CONTEXT", "OBSTACLE", "PATTERN", "STRENGTH", "DIFFICULTY"]),
 });
+
+// ───────────────────────── opportunities, portfolio & CV ─────────────────────────
+
+const dateKey = z
+  .string()
+  .optional()
+  .transform((v) => (v ? v : null))
+  .refine((v) => v === null || /^\d{4}-\d{2}-\d{2}$/.test(v), "Use a valid date");
+const monthKey = z
+  .string()
+  .optional()
+  .transform((v) => (v ? v : null))
+  .refine((v) => v === null || /^\d{4}-\d{2}$/.test(v), "Use a valid month");
+const oppKind = z.enum(["INTERNSHIP", "PROGRAMME", "COMPETITION", "SCHOLARSHIP", "RESEARCH", "FELLOWSHIP", "HACKATHON", "JOB", "OTHER"]);
+
+export const manualOpportunitySchema = z.object({
+  sourceUrl: text(500).url("Paste the full link to the posting (starting with https://)"),
+  postingText: optionalText(15000),
+  title: optionalText(160),
+  organisation: optionalText(160),
+  kind: z.union([oppKind, z.literal("")]).transform((v) => (v ? v : null)),
+  location: optionalText(120),
+  workMode: z.union([z.enum(["REMOTE", "ONSITE", "HYBRID"]), z.literal("")]).transform((v) => (v ? v : null)),
+  deadline: dateKey,
+  compensation: optionalText(120),
+});
+
+export const opportunityEditSchema = z.object({
+  title: text(160).min(2),
+  organisation: optionalText(160),
+  location: optionalText(120),
+  compensation: optionalText(120),
+  deadline: dateKey,
+  requirements: list(15, 140),
+});
+
+export const applicationUpdateSchema = z.object({
+  status: z.enum(["SAVED", "PREPARING", "APPLIED", "INTERVIEWING", "OFFER", "REJECTED", "WITHDRAWN"]),
+  notes: optionalText(2000),
+  nextStep: optionalText(160),
+  nextStepDate: dateKey,
+  cvId: optionalText(40),
+});
+
+export const interviewAnswerSchema = z.object({
+  applicationId: optionalText(40),
+  achievementId: optionalText(40),
+  question: text(500).min(5),
+  answer: text(8000).min(20, "Write (or dictate) at least a few sentences"),
+});
+
+export const achievementSchema = z.object({
+  kind: z.enum(["PROJECT", "COURSEWORK", "CERTIFICATE", "VOLUNTEERING", "COMPETITION", "RESPONSIBILITY", "AWARD", "INTERNSHIP", "RESEARCH", "EXTRACURRICULAR", "OTHER"]),
+  title: text(160).min(3, "Give it a short title"),
+  organisation: optionalText(160),
+  role: optionalText(120),
+  startMonth: monthKey,
+  endMonth: monthKey,
+  description: text(2000).min(10, "Describe what you did in a sentence or two"),
+  outcomes: optionalText(1000),
+  skills: list(15, 60),
+  subjects: list(10, 80),
+  evidenceLinks: list(5, 500),
+});
+
+const year = z
+  .union([z.string(), z.number()])
+  .optional()
+  .transform((v, ctx) => {
+    if (v === undefined || v === "") return null;
+    const n = Number(v);
+    if (!Number.isInteger(n) || n < 1980 || n > 2100) {
+      ctx.addIssue({ code: "custom", message: "Use a 4-digit year" });
+      return z.NEVER;
+    }
+    return n;
+  });
+
+export const educationRecordSchema = z.object({
+  qualification: text(120).min(2, "e.g. Class 12, B.Tech Computer Science"),
+  institution: text(160).min(2, "Name the school or college"),
+  board: optionalText(120),
+  startYear: year,
+  endYear: year,
+  current: z.coerce.boolean().default(false),
+  result: optionalText(60),
+});
+
+export const cvCreateSchema = z.object({
+  title: text(120).min(2, "Name this CV, e.g. “General” or “Internships”"),
+  targetOpportunityId: optionalText(40),
+});
+
+export const cvDetailsSchema = z.object({
+  title: text(120).min(2),
+  headline: optionalText(160),
+  summary: optionalText(800),
+  contactLine: optionalText(200),
+  achievementIds: z.array(z.string()).max(40).default([]),
+  educationIds: z.array(z.string()).max(10).default([]),
+  skills: list(30, 60),
+});

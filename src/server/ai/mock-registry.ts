@@ -6,3 +6,4 @@ import "./mocks/calendar";
 import "./mocks/journal";
 import "./mocks/companion";
 import "./mocks/career";
+import "./mocks/opportunities";

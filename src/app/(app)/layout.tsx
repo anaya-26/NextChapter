@@ -37,10 +37,12 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           </Suspense>
         </header>
 
-        <Suspense fallback={null}>
-          <ShellBanners />
-        </Suspense>
-        <OfflineNotice />
+        <div className="print:hidden">
+          <Suspense fallback={null}>
+            <ShellBanners />
+          </Suspense>
+          <OfflineNotice />
+        </div>
 
         <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 pb-28 pt-5 sm:px-6 lg:pb-12">
           {children}

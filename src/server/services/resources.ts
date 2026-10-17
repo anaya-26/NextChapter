@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { CostType, Difficulty, ResourceType } from "@/generated/prisma/client";
 import { isHttpUrl } from "@/lib/utils";
 import { prisma } from "../db";
+import { checkLink } from "../net";
 import { CORE_RULES } from "../ai/prompts";
 import { aiStatus, getAiProvider, withAi } from "../ai";
 import { enqueueJob } from "../jobs/queue";
@@ -157,18 +158,11 @@ export async function setResourceFlags(userId: string, id: string, flags: { save
   return res.count === 1;
 }
 
-/** Checks links are reachable. Network failures leave the status "unchecked" rather than claiming a dead link. */
+/** Checks links are reachable (through the private-network guard). Network failures leave the status "unchecked". */
 export async function checkResourceLinks(userId: string, ids: string[]) {
   const resources = await prisma.resource.findMany({ where: { userId, id: { in: ids } } });
   for (const r of resources) {
-    let status: "REACHABLE" | "UNREACHABLE" | "UNCHECKED" = "UNCHECKED";
-    try {
-      let res = await fetch(r.url, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(8000) });
-      if (res.status === 405 || res.status === 403) res = await fetch(r.url, { method: "GET", redirect: "follow", signal: AbortSignal.timeout(8000) });
-      status = res.ok ? "REACHABLE" : res.status === 404 || res.status === 410 ? "UNREACHABLE" : "UNCHECKED";
-    } catch {
-      status = "UNCHECKED";
-    }
+    const status = await checkLink(r.url);
     await prisma.resource.update({ where: { id: r.id }, data: { linkStatus: status, linkCheckedAt: new Date() } });
   }
 }

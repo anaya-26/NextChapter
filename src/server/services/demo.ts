@@ -4,6 +4,7 @@ import { addDaysToKey, dateOnly, localDateKey, zonedToUtc } from "@/lib/time";
 import { sessionPoints } from "@/lib/xp-rules";
 import { getProfile } from "./profile";
 import { awardXp } from "./xp";
+import { createEvent } from "./calendar";
 
 /** Small deterministic PRNG so demo history is reproducible. */
 function rng(seed: number) {
@@ -294,6 +295,37 @@ export async function seedDemoHistory(userId: string, at: Date) {
     },
   });
 
+  // A saved opportunity to try gap analysis, tracking and tailoring on (example.org: placeholder by design).
+  const demoDeadline = addDaysToKey(localDateKey(at, tz), 20);
+  const opportunity = await prisma.opportunity.create({
+    data: {
+      ownerId: userId,
+      sourceType: "MANUAL",
+      sourceName: "example.org (demo)",
+      sourceUrl: "https://example.org/demo/summer-research-internship",
+      title: "Summer research internship — sensors lab (demo)",
+      organisation: "Example Institute of Technology (demo)",
+      kind: "INTERNSHIP",
+      description: "Demonstration posting. Help a lab build and test low-cost temperature and strain sensors, and write up the results.",
+      eligibility: "Enrolled in an undergraduate science or engineering course.",
+      location: "Pune",
+      workMode: "HYBRID",
+      duration: "8 weeks",
+      compensation: "₹8,000 a month (demo)",
+      deadline: zonedToUtc(demoDeadline, "23:59", tz),
+      requirements: ["Python", "Basic electronics", "Data plotting", "Report writing", "Enrolled in an undergraduate science or engineering course"],
+      tags: ["read-by:STUDENT"],
+      verification: "UNVERIFIED",
+      isDemo: true,
+    },
+  });
+  const application = await prisma.application.create({ data: { userId, opportunityId: opportunity.id } });
+  await createEvent(
+    userId,
+    { title: `Deadline: ${opportunity.title}`, kind: "APPLICATION", dateKey: demoDeadline, startTime: "23:44", durationMinutes: 15, allDay: false, rrule: null, reminderMinutes: [24 * 60], showCountdown: true, isDeadline: true, applicationId: application.id },
+    { isDemo: true },
+  );
+
   await prisma.studentProfile.update({ where: { userId }, data: { demoDataLoadedAt: at } });
   return { topics: topics.length };
 }
@@ -306,6 +338,7 @@ export async function removeDemoData(userId: string) {
     prisma.studySession.deleteMany({ where: { userId, isDemo: true } }),
     prisma.journalEntry.deleteMany({ where: { userId, isDemo: true } }),
     prisma.achievement.deleteMany({ where: { userId, isDemo: true } }),
+    prisma.opportunity.deleteMany({ where: { ownerId: userId, isDemo: true } }),
     prisma.experiment.deleteMany({ where: { userId, isDemo: true } }),
     prisma.mistake.deleteMany({ where: { userId, isDemo: true } }),
     prisma.goal.deleteMany({ where: { userId, isDemo: true } }),

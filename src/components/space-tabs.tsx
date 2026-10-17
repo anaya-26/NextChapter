@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export function SpaceTabs({ tabs, label }: { tabs: { href: string; label: string; exact?: boolean }[]; label: string }) {
   const pathname = usePathname();
   return (
-    <nav aria-label={label} className="-mx-4 mb-5 overflow-x-auto border-b border-border px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+    <nav aria-label={label} className="-mx-4 mb-5 overflow-x-auto border-b border-border px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 print:hidden">
       <ul className="flex gap-1">
         {tabs.map((t) => {
           const active = t.exact ? pathname === t.href : pathname === t.href || pathname.startsWith(`${t.href}/`);
