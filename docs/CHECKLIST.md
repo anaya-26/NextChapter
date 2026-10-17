@@ -2,7 +2,7 @@
 
 Legend: ✅ done and tested · 🟡 partial / works with limitations · ⏳ planned in a later stage · 🔌 needs an external credential to go live
 
-Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, experiments).
+Last updated: Stage 12 (verification, docs and delivery). Everything listed is built; 🟡 and 🔌 items say exactly what is limited or needs a credential.
 
 ## Foundation
 - ✅ Next.js 16.4 App Router (Cache Components + Partial Prefetching), TypeScript, Tailwind v4 design tokens (light/dark, Lite mode)
@@ -138,6 +138,21 @@ Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, exp
 - 🟡 Moderators are appointed in the database (a development switch exists in Settings → Developer); no automated toxicity classifier — moderation relies on reports, contact-detail blocking and distress detection
 ## 16. Navigation & design
 - ✅ Six main spaces, calendar always in the header, companion button on every page, mobile bottom bar
-- ✅ Loading skeletons per route, error boundary, empty states, offline notice, Lite mode
+- ✅ Loading skeletons per route, error boundary, friendly not-found pages, empty states, offline notice, Lite mode
+- ✅ Forms keep what the student typed when a submission fails
 - ✅ Phone layouts: an automated check that every main page fits a 390-px screen without sideways scrolling
-## 17–18. Architecture & verification — ongoing; see `README.md` and `tests/`
+## 17. Architecture
+- ✅ Connected data model (syllabus → topics → materials → lessons/notes/cards/practice → sessions → reflections → goals → applications → CV → community posts), persistent Postgres storage
+- ✅ Authentication, private files served only to their owner, per-student isolation in every service, server-side secrets (env validated at start-up; OAuth tokens encrypted)
+- ✅ Trusted application instructions kept separate from retrieved content (materials, web pages, postings, journal text are wrapped and labelled as data)
+- ✅ Background processing (job queue with dedupe and retries), caching via Cache Components, usage limits (AI requests per student per day, community rate limits)
+- ✅ Outbound fetches guarded against private-network addresses
+- ✅ Clear setup (`README.md`, `.env.example` without secrets, migrations, `npm run db:seed`), labelled demo data, capability page showing what works
+
+## 18. Verification
+- ✅ Connected journey in one end-to-end test (`tests/e2e/journey.spec.ts`): syllabus → roadmap → topic with traceable sources → practice → revision in the calendar → reflection with chosen AI permission → XP counted once → saved opportunity → gaps → real achievement in a CV → deliberate community post
+- ✅ Persistence and per-student isolation across every feature (`tests/integration/isolation.test.ts`)
+- ✅ Memory controls (view, correct, delete; revoking journal access forgets what was learned) and calendar permissions (least-privilege scopes, preview before change, disconnect)
+- ✅ Three-month discovery review via labelled demo history and the per-student test clock
+- ✅ Phone-width check for every main page; production build; lint with zero warnings
+

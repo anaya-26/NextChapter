@@ -25,7 +25,7 @@ test("approve a real achievement, save an opening, find gaps, plan, practise and
   await page.getByLabel("Evidence links").fill("https://example.org/meera/plant-bot");
   await page.getByLabel("Evidence links").press("Enter");
   await page.getByRole("button", { name: "Save as draft" }).click();
-  await expect(page).toHaveURL(/\/goals\/portfolio\/[a-z0-9]+$/);
+  await expect(page).toHaveURL(/\/goals\/portfolio\/(?!new$)[a-z0-9]+$/);
   await expect(page.getByText("Draft — not in CVs")).toBeVisible();
   await page.getByRole("button", { name: "Approve" }).click();
   await page.getByRole("button", { name: "Yes, approve" }).click();

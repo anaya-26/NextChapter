@@ -30,7 +30,7 @@ export const SYNCABLE_KINDS: EventKind[] = ["REVISION", "STUDY", "EXAM", "ASSIGN
 /* ── OAuth state ──────────────────────────────────────────────────── */
 
 function sign(value: string) {
-  return createHmac("sha256", env().BETTER_AUTH_SECRET ?? "dev-secret").update(value).digest("base64url");
+  return createHmac("sha256", env().BETTER_AUTH_SECRET).update(value).digest("base64url");
 }
 
 /** Signed, expiring state bound to the user and a browser nonce (stored in a cookie). */
