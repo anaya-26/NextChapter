@@ -125,7 +125,7 @@ export default async function SyncPage(props: PageProps<"/calendar/sync">) {
                 return (
                   <div key={c.id} className="flex flex-col gap-2 rounded-lg border border-warning/40 p-3 text-sm">
                     <p className="font-medium">{c.summary}</p>
-                    <div className="grid gap-2 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       <div className="rounded-lg bg-surface-2 p-2">
                         <p className="text-xs font-semibold uppercase text-muted">In Kadam</p>
                         <p>{detail.kadam?.title}</p>

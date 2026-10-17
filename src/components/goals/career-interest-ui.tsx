@@ -96,7 +96,7 @@ export function InterestForm({ initial, onDone }: { initial?: InterestView; onDo
   const key = initial?.id ?? "new";
   return (
     <ActionForm action={saveCareerInterest.bind(null, initial?.id ?? null)} resetOnSuccess={!initial} onSuccess={onDone} className="grid gap-4">
-      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
         <Field label="Domain" htmlFor={`ci-d-${key}`}>
           <Input id={`ci-d-${key}`} name="domain" list={`domains-${key}`} defaultValue={initial?.domain} placeholder="e.g. Data science & AI" required />
           <datalist id={`domains-${key}`}>

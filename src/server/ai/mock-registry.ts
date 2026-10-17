@@ -3,3 +3,4 @@ import "server-only";
 import "./mocks/syllabus";
 import "./mocks/learning";
 import "./mocks/calendar";
+import "./mocks/journal";

@@ -69,7 +69,7 @@ export default async function GoalsPage() {
             return (
               <section key={h}>
                 <SectionTitle>{h === "SHORT" ? "Short-term goals" : "Long-term goals"}</SectionTitle>
-                <div className="grid gap-3 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   {list.map((g) => (
                     <GoalCard key={g.id} goal={view(g)} today={at.toISOString()} timezone={profile.timezone} />
                   ))}

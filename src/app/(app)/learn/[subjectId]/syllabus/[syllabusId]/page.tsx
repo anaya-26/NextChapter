@@ -115,7 +115,7 @@ export default async function SyllabusPage(props: PageProps<"/learn/[subjectId]/
           </ul>
         </Notice>
       ) : null}
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <aside className="flex flex-col gap-3 lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
           <details open className="rounded-[var(--radius-card)] border border-border bg-surface p-4">
             <summary className="cursor-pointer font-semibold">Your original ({syllabus.sources.length})</summary>

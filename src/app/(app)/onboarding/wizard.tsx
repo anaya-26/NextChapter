@@ -164,7 +164,7 @@ export function StepEducation({ p }: { p: ProfileInit }) {
         <legend className="mb-2 text-sm font-medium">Where are you now?</legend>
         <ChoiceCards name="educationStage" options={EDUCATION_STAGES} defaultValue={p.educationStage} />
       </fieldset>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Board or university" htmlFor="boardOrUniversity" hint={`e.g. ${BOARDS.slice(0, 3).join(", ")} or your university`}>
           <Input id="boardOrUniversity" name="boardOrUniversity" defaultValue={p.boardOrUniversity ?? ""} list="boards" />
           <datalist id="boards">
@@ -209,7 +209,7 @@ export function StepTime({ p }: { p: ProfileInit }) {
   return (
     <>
       <Heading title="Your time" text="Realistic plans start from the time you actually have." />
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Hours per week you'd like to study" htmlFor="weeklyStudyHoursTarget" hint="Outside classes. A rough number is fine.">
           <Input id="weeklyStudyHoursTarget" name="weeklyStudyHoursTarget" type="number" min={0} max={100} defaultValue={p.weeklyStudyHoursTarget ?? ""} />
           <FieldError name="weeklyStudyHoursTarget" />
@@ -287,7 +287,7 @@ export function StepCompanion({
     <>
       <Heading title="Your companion" text="Choose how Kadam talks to you and what it may use." />
       <ToneSlider name="companionTone" defaultValue={p.companionTone} />
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Coaching intensity" htmlFor="coachingIntensity">
           <Select id="coachingIntensity" name="coachingIntensity" defaultValue={p.coachingIntensity}>
             <option value="GENTLE">Gentle — one small step at a time</option>

@@ -3,3 +3,4 @@ import "server-only";
 import "./syllabus-jobs";
 import "./learning-jobs";
 import "./calendar-jobs";
+import "./journal-jobs";

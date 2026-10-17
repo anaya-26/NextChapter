@@ -82,7 +82,7 @@ export default async function StudySessionPage(props: PageProps<"/study/[session
           <p className="flex items-center gap-2 font-semibold text-success">
             <CheckCircle2 className="size-5" aria-hidden /> {session.actualMinutes} minutes logged{session.status === "PARTIAL" ? " (shorter than planned — that still counts)" : ""}
           </p>
-          {xp ? <p className="text-sm font-medium text-primary">+{xp.points} XP for focused study</p> : null}
+          {xp && !profile.quietMode ? <p className="text-sm font-medium text-primary">+{xp.points} XP for focused study</p> : null}
           {session.achievements ? <p className="text-sm">Went well: {session.achievements}</p> : null}
           {session.difficulties ? <p className="text-sm">Difficult: {session.difficulties}</p> : null}
           <div className="flex flex-wrap gap-2">

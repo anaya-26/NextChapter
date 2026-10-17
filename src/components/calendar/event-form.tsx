@@ -50,7 +50,7 @@ export function EventForm({ eventId, values, timezone, onDone }: { eventId: stri
         <Input id={`ev-title-${id}`} name="title" defaultValue={values.title} required maxLength={160} />
         <FieldError name="title" />
       </Field>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label="Type" htmlFor={`ev-kind-${id}`}>
           <Select
             id={`ev-kind-${id}`}
@@ -106,7 +106,7 @@ export function EventForm({ eventId, values, timezone, onDone }: { eventId: stri
           <Input id={`ev-est-${id}`} name="estimate" type="number" min={0} step={15} defaultValue={values.estimate ?? ""} className="w-40" />
         </Field>
       ) : null}
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label="Repeats" htmlFor={`ev-repeat-${id}`}>
           <Select id={`ev-repeat-${id}`} name="repeat" value={repeat} onChange={(e) => setRepeat(e.target.value as typeof repeat)}>
             <option value="NONE">Doesn’t repeat</option>
@@ -128,7 +128,7 @@ export function EventForm({ eventId, values, timezone, onDone }: { eventId: stri
           <FieldError name="days" />
         </div>
       ) : null}
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label="Reminder" htmlFor={`ev-rem-${id}`}>
           <Select id={`ev-rem-${id}`} name="reminder" defaultValue={values.reminder}>
             {reminderOptions.map((o) => (

@@ -2,7 +2,7 @@
 
 Legend: ✅ done and tested · 🟡 partial / works with limitations · ⏳ planned in a later stage · 🔌 needs an external credential to go live
 
-Last updated: Stage 4 (calendar, planner, restart, reminders, Google Calendar).
+Last updated: Stages 5–6 (journal, study log, weekly review, progress, XP, experiments).
 
 ## Foundation
 - ✅ Next.js 16.4 App Router (Cache Components + Partial Prefetching), TypeScript, Tailwind v4 design tokens (light/dark, Lite mode)
@@ -69,14 +69,27 @@ Last updated: Stage 4 (calendar, planner, restart, reminders, Google Calendar).
 - ✅ .ics export for any calendar app
 - 🔌 Google Calendar (needs GOOGLE_CLIENT_ID/SECRET): least-privilege scopes (calendar.app.created + calendar.freebusy), separate “Kadam — study plan” calendar, every change previewed and approved, conflicts resolved side by side, choice of what to copy, encrypted tokens, disconnect (optionally deleting the calendar) — tested against an in-memory Google double
 - ✅ Today: one clear start action, up to three priorities, due revisions and flashcards, countdowns, this week’s planned vs done, quick focus, study log, restart and obstacle prompts, welcome-back celebration
-## 8. Journal & study log — ⏳ Stage 5
-## 9. Progress & experiments — 🟡 XP ledger done; views ⏳ Stage 6
+## 8. Journal & study log
+- ✅ Private journal: quick check-ins (mood, optional energy, one line), reflections (went well / difficult / topics, prefilled with today’s planned vs actual), notes, photos (up to 4) and recorded voice notes — never shared to Community
+- ✅ Per-entry AI permission (off by default) plus the Privacy master switch; turning either off removes memories and suggestions derived from the entry; deleting an entry deletes its files and memories
+- ✅ Study log: 14 days of planned vs actual minutes, sessions with topics, difficulties, achievements, missed reasons and check-in mood
+- ✅ Task suggestions from shared entries (AI or rules) and weekly reviews (highlights, tentative patterns, difficulties, small next steps) that state exactly what was used; suggestions are proposals the student accepts or dismisses
+- ✅ Wellbeing safeguard: entries that sound like distress show Tele-MANAS (14416) and 112 and are not analysed
+- 🔌 Voice-note transcription needs a transcription service; recordings are stored privately either way
+
+## 9. Progress & experiments
+- ✅ Real improvement: study time per week (planned vs actual), practice accuracy and recall-at-revision trends, improvement claimed only with enough data
+- ✅ Consistency heatmap (no streak loss), returns after breaks celebrated, topics studied / understanding checked / revised per subject, recurring difficulties
+- ✅ Personal experiments: templates suggested from the study log or the student’s own design; baseline vs during, honest small-sample notes, student verdict and reflection; sessions linked to the running experiment
 ## 10. Goals & career discovery — 🟡 goals, milestones, priority, career interests done; discovery review ⏳ Stage 8
 ## 11. Opportunities — ⏳ Stage 9
 ## 12. Portfolio & CV — ⏳ Stage 10
-## 13. XP & visible growth — 🟡 rules, dedupe, caps, return celebration, badges done; UI ⏳ Stage 6
+## 13. XP & visible growth
+- ✅ Understandable XP rules (shown in the app), once per meaningful action, daily caps; levels; badges with how to earn them; recent XP with reasons
+- ✅ Optional Kadamba tree that grows with level; quiet interface hides XP, levels, badges and celebrations while keeping real progress
 ## 14. Community — ⏳ Stage 11
 ## 16. Navigation & design
 - ✅ Six main spaces, calendar always in the header, companion button on every page, mobile bottom bar
 - ✅ Loading skeletons per route, error boundary, empty states, offline notice, Lite mode
+- ✅ Phone layouts: an automated check that every main page fits a 390-px screen without sideways scrolling
 ## 17–18. Architecture & verification — ongoing; see `README.md` and `tests/`

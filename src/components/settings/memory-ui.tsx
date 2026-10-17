@@ -133,7 +133,7 @@ function MemoryRow({ item }: { item: Item }) {
 
 export function AddMemoryForm() {
   return (
-    <ActionForm action={addMemoryAction} resetOnSuccess className="grid gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+    <ActionForm action={addMemoryAction} resetOnSuccess className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-end">
       <Field label="Statement" htmlFor="mem-content">
         <Input id="mem-content" name="content" placeholder="e.g. I learn best with diagrams; I commute 1 hour by train" maxLength={400} />
         <FieldError name="content" />

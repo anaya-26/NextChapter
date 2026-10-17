@@ -62,6 +62,8 @@ export async function finishSession(userId: string, id: string, input: FinishInp
   if (!s) throw new Error("Session not found");
   const actual = Math.max(0, Math.min(600, Math.round(input.actualMinutes)));
   const partial = !!s.plannedMinutes && actual < s.plannedMinutes * 0.6;
+  // Sessions during a running personal experiment are counted towards it.
+  const experiment = await prisma.experiment.findFirst({ where: { userId, status: "ACTIVE", startAt: { lte: at }, endAt: { gte: at } }, select: { id: true } });
   const updated = await prisma.studySession.update({
     where: { id },
     data: {
@@ -74,6 +76,7 @@ export async function finishSession(userId: string, id: string, input: FinishInp
       energy: input.energy ?? null,
       focusQuality: input.focusQuality ?? null,
       note: input.note || null,
+      experimentId: s.experimentId ?? experiment?.id ?? null,
     },
   });
   if (s.calendarEventId) await prisma.calendarEvent.update({ where: { id: s.calendarEventId }, data: { status: "DONE" } });

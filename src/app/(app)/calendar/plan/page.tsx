@@ -93,7 +93,7 @@ export default async function PlanPage(props: PageProps<"/calendar/plan">) {
         />
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card className="p-4">
               <p className="text-sm text-muted">Fits in the next {plan.days} days</p>
               <p className="text-2xl font-semibold">{formatDuration(result.placedMinutes)}</p>
@@ -136,7 +136,7 @@ export default async function PlanPage(props: PageProps<"/calendar/plan">) {
             </Notice>
           ) : null}
           {plan.choices.length ? (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {plan.choices.map((c) => (
                 <Link key={c.id} href={hrefFor(c.options)} className="group">
                   <Card className="flex h-full flex-col gap-1 p-4 transition-colors group-hover:border-primary">

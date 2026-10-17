@@ -174,7 +174,7 @@ export function GoalCard({ goal, today, highlight }: { goal: GoalView; today: st
 
 export function GoalForm({ initial, onDone }: { initial?: GoalView; onDone?: () => void }) {
   return (
-    <ActionForm action={saveGoal.bind(null, initial?.id ?? null)} resetOnSuccess={!initial} onSuccess={onDone} className="grid gap-3 sm:grid-cols-2">
+    <ActionForm action={saveGoal.bind(null, initial?.id ?? null)} resetOnSuccess={!initial} onSuccess={onDone} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Field label="Goal" htmlFor={`g-title-${initial?.id ?? "new"}`} className="sm:col-span-2">
         <Input id={`g-title-${initial?.id ?? "new"}`} name="title" defaultValue={initial?.title} placeholder="Specific and achievable" required maxLength={160} />
         <FieldError name="title" />

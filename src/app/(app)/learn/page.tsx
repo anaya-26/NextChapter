@@ -36,7 +36,7 @@ export default async function LearnPage() {
       {subjects.length === 0 ? (
         <EmptyState icon={BookOpen} title="Add your first subject" description="Then add its syllabus — a photo is enough." />
       ) : (
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
           {subjects.map((s) => {
             const confirmed = s.syllabi.find((x) => x.status === "CONFIRMED");
             const draft = s.syllabi.find((x) => x.status !== "CONFIRMED");

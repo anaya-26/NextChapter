@@ -74,7 +74,7 @@ export function CommitmentList({ commitments }: { commitments: CommitmentRow[] }
 export function CommitmentForm({ initial, onDone }: { initial?: CommitmentRow; onDone?: () => void }) {
   const action = saveCommitment.bind(null, initial?.id ?? null);
   return (
-    <ActionForm action={action} resetOnSuccess={!initial} onSuccess={onDone} className="grid gap-3 sm:grid-cols-2">
+    <ActionForm action={action} resetOnSuccess={!initial} onSuccess={onDone} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Field label="What is it?" htmlFor="c-title">
         <Input id="c-title" name="title" defaultValue={initial?.title} placeholder="e.g. College lectures" required />
         <FieldError name="title" />

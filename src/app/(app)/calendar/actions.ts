@@ -174,7 +174,8 @@ export async function finishSessionAction(id: string, _prev: ActionResult, form:
   if (!r.success) return fail("Please check the form.", fieldErrorsFrom(r.error));
   const { xp } = await finishSession(user.id, id, r.data, await now(user.id));
   refresh();
-  return { ok: true, message: xp.awarded ? `Session saved · +${xp.points} XP${xp.returnBonus ? ` (+${xp.returnBonus} welcome back)` : ""}` : "Session saved" };
+  const quiet = (await getProfile(user.id)).quietMode;
+  return { ok: true, message: xp.awarded && !quiet ? `Session saved · +${xp.points} XP${xp.returnBonus ? ` (+${xp.returnBonus} welcome back)` : ""}` : "Session saved" };
 }
 
 export async function missSessionAction(id: string, reason: string | null) {

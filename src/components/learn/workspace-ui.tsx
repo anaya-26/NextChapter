@@ -183,7 +183,7 @@ export function DraftNoteButton({ topicId }: { topicId: string }) {
 
 export function CardForm({ topicId }: { topicId: string }) {
   return (
-    <ActionForm action={createCardAction.bind(null, topicId)} resetOnSuccess className="grid gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+    <ActionForm action={createCardAction.bind(null, topicId)} resetOnSuccess className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
       <Field label="Front (question)" htmlFor="card-front">
         <Textarea id="card-front" name="front" className="min-h-16" />
       </Field>
@@ -244,7 +244,7 @@ export function OwnQuestionForm({ topicId }: { topicId: string }) {
         <FieldError name="prompt" />
       </Field>
       {type === "MCQ" ? (
-        <div className="grid gap-2 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (
             <Input key={i} name="options" placeholder={`Option ${i}`} aria-label={`Option ${i}`} />
           ))}
@@ -268,7 +268,7 @@ export function OwnQuestionForm({ topicId }: { topicId: string }) {
 
 export function ScheduleRevisionForm({ topicId, defaultDate, defaultTime }: { topicId: string; defaultDate: string; defaultTime: string }) {
   return (
-    <ActionForm action={scheduleRevisionAction.bind(null, topicId)} className="grid gap-3 sm:grid-cols-[auto_auto_auto_auto] sm:items-end">
+    <ActionForm action={scheduleRevisionAction.bind(null, topicId)} className="grid grid-cols-1 gap-3 sm:grid-cols-[auto_auto_auto_auto] sm:items-end">
       <Field label="Date" htmlFor="rv-date">
         <Input id="rv-date" name="date" type="date" defaultValue={defaultDate} required />
       </Field>
@@ -332,7 +332,7 @@ export function ResourceFlags({ id, saved }: { id: string; saved: boolean }) {
 
 export function AddResourceForm({ topicId, subjectId }: { topicId: string | null; subjectId: string | null }) {
   return (
-    <ActionForm action={addResourceAction.bind(null, topicId, subjectId)} resetOnSuccess className="grid gap-2 sm:grid-cols-[1.4fr_1fr_auto_auto] sm:items-end">
+    <ActionForm action={addResourceAction.bind(null, topicId, subjectId)} resetOnSuccess className="grid grid-cols-1 gap-2 sm:grid-cols-[1.4fr_1fr_auto_auto] sm:items-end">
       <Field label="Link" htmlFor="res-url">
         <Input id="res-url" name="url" type="url" placeholder="https://" required />
         <FieldError name="url" />

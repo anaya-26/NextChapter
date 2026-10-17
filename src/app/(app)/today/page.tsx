@@ -5,7 +5,7 @@ import { ArrowRight, CalendarClock, Layers, LifeBuoy, Play, PartyPopper, Sparkle
 import { prisma } from "@/server/db";
 import { requireUser } from "@/server/session";
 import { now } from "@/server/clock";
-import { getProfile, profileCompleteness } from "@/server/services/profile";
+import { getPrivacy, getProfile, profileCompleteness } from "@/server/services/profile";
 import { todayOverview } from "@/server/services/today";
 import { OBSTACLE_REASONS } from "@/server/services/sessions";
 import { DAY_PARTS } from "@/lib/planner";
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { startFocusAction, startSessionAction } from "../calendar/actions";
 import { KIND_META } from "@/components/calendar/kinds";
 import { LogStudyForm, ObstacleForm } from "@/components/calendar/planning-ui";
+import { CheckInCard, MoodDot } from "@/components/journal/journal-ui";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -34,6 +35,10 @@ export default async function TodayPage(props: PageProps<"/today">) {
   const greeting = hour < 12 ? t("greetingMorning", { name }) : hour < 17 ? t("greetingAfternoon", { name }) : t("greetingEvening", { name });
   const completeness = profileCompleteness(profile);
   const priority = await prisma.goal.findFirst({ where: { userId: user.id, isCurrentPriority: true, status: "ACTIVE" } });
+  const [privacy, checkedIn] = await Promise.all([
+    getPrivacy(user.id),
+    prisma.journalEntry.findFirst({ where: { userId: user.id, kind: "CHECK_IN", date: new Date(`${o.todayKey}T00:00:00Z`) }, orderBy: { createdAt: "desc" }, select: { id: true, mood: true } }),
+  ]);
   const topics = await prisma.topic.findMany({
     where: { userId: user.id, syllabus: { status: "CONFIRMED", subject: { status: "ACTIVE" } }, status: { in: ["IN_PROGRESS", "NOT_STARTED"] } },
     orderBy: [{ status: "asc" }, { order: "asc" }],
@@ -60,7 +65,7 @@ export default async function TodayPage(props: PageProps<"/today">) {
       {o.welcomeBack ? (
         <Notice tone="success" title={t("welcomeBack")}>
           <span className="inline-flex items-center gap-1">
-            <PartyPopper className="size-4" aria-hidden /> +15 XP for coming back. One small session today is a great restart.
+            <PartyPopper className="size-4" aria-hidden /> {profile.quietMode ? "" : "+15 XP for coming back. "}One small session today is a great restart.
           </span>
         </Notice>
       ) : null}
@@ -137,7 +142,7 @@ export default async function TodayPage(props: PageProps<"/today">) {
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
         <Card className="p-5">
           <SectionTitle action={<Link href="/calendar" className="text-sm font-medium text-primary hover:underline">Calendar</Link>}>{t("priorities")}</SectionTitle>
           {o.priorities.length ? (
@@ -213,7 +218,22 @@ export default async function TodayPage(props: PageProps<"/today">) {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      {!checkedIn ? (
+        <Card className="flex flex-col gap-3 p-5">
+          <SectionTitle action={<Link href="/journal" className="text-sm font-medium text-primary hover:underline">Journal</Link>}>{t("checkIn")}</SectionTitle>
+          <CheckInCard masterOn={privacy.aiUseJournal} />
+        </Card>
+      ) : (
+        <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
+          Checked in today · <MoodDot mood={checkedIn.mood} />
+          {profile.quietMode ? null : <span>(+5 XP)</span>}
+          <Link href="/journal" className="font-medium text-primary hover:underline">
+            Add a reflection
+          </Link>
+        </p>
+      )}
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card className="flex flex-col gap-3 p-5">
           <SectionTitle>Quick focus</SectionTitle>
           <p className="text-sm text-muted">No plan needed — start a timer and log what you did.</p>

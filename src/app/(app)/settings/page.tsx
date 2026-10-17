@@ -32,7 +32,7 @@ export default async function SettingsPage() {
     <div className="flex flex-col gap-6">
       <PageHeader title="Settings" description="Your profile, preferences and privacy. Everything here can be changed at any time." />
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {links.map(({ href, icon: Icon, title, text }) => (
           <Link key={href} href={href} className="group flex items-center gap-3 rounded-[var(--radius-card)] border border-border bg-surface p-4 shadow-card hover:border-primary">
             <span className="rounded-xl bg-primary-soft p-2.5 text-primary-soft-fg">

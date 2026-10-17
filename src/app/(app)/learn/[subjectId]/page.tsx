@@ -106,7 +106,7 @@ export default async function RoadmapPage(props: PageProps<"/learn/[subjectId]">
         </Card>
       ) : null}
 
-      <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.4fr_1fr]">
         <Card className="p-5">
           <div className="flex items-end justify-between gap-3">
             <div>

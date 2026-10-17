@@ -6,7 +6,7 @@ import { Field, Input, SubmitButton } from "@/components/ui/form";
 
 export function AddSubjectForm() {
   return (
-    <ActionForm action={createSubjectAction} className="grid gap-3 sm:grid-cols-[1.5fr_1fr_1fr_auto] sm:items-end">
+    <ActionForm action={createSubjectAction} className="grid grid-cols-1 gap-3 sm:grid-cols-[1.5fr_1fr_1fr_auto] sm:items-end">
       <Field label="Subject" htmlFor="subject-name">
         <Input id="subject-name" name="name" placeholder="e.g. Physics, Financial Accounting" required maxLength={80} />
         <FieldError name="name" />

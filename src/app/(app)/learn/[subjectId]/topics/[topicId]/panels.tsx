@@ -573,7 +573,7 @@ export async function ResourcesPanel({ ctx }: { ctx: TopicContext }) {
       <Card className="p-4 sm:p-5">
         <SectionTitle>Trusted free sources</SectionTitle>
         <p className="mb-3 text-sm text-muted">Each link opens a search for this topic on an official or open-education site.</p>
-        <ul className="grid gap-2 sm:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {directory.map((d) => (
             <li key={d.id}>
               <a href={d.url} target="_blank" rel="noreferrer noopener" className="flex h-full flex-col gap-0.5 rounded-lg border border-border p-3 text-sm hover:border-primary">

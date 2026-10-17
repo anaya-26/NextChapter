@@ -174,7 +174,7 @@ export function MissSessionForm({ sessionId }: { sessionId: string }) {
 
 export function LogStudyForm({ todayKey, nowTime, topics }: { todayKey: string; nowTime: string; topics: { id: string; label: string }[] }) {
   return (
-    <ActionForm action={logStudyAction} resetOnSuccess className="grid gap-3 sm:grid-cols-2">
+    <ActionForm action={logStudyAction} resetOnSuccess className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Field label="What did you study?" htmlFor="log-title" className="sm:col-span-2">
         <Input id="log-title" name="title" placeholder="e.g. Solved 10 numericals on capacitors" maxLength={160} />
         <FieldError name="title" />

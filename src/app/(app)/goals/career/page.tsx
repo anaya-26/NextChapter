@@ -25,7 +25,7 @@ export default async function CareerPage() {
         <InterestForm />
       </Card>
       {interests.length ? (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {interests.map((i) => (
             <InterestCard key={i.id} interest={{ id: i.id, domain: i.domain, roles: i.roles, companies: i.companies, cities: i.cities, workModes: i.workModes, status: i.status, notes: i.notes }} />
           ))}
