@@ -1,0 +1,15 @@
+PHYSICS — CLASS XII (Sample syllabus for testing; not an official board document)
+
+Unit I: Electrostatics (Marks: 16)
+Chapter 1: Electric Charges and Fields — Electric charges; conservation of charge; Coulomb's law; electric field; electric field lines; electric dipole; Gauss's theorem and its applications.
+Chapter 2: Electrostatic Potential and Capacitance — Electric potential; potential difference; equipotential surfaces; capacitors and capacitance; combination of capacitors in series and parallel.
+
+Unit II: Current Electricity (Marks: 12)
+Chapter 3: Current Electricity — Electric current; drift velocity; Ohm's law; resistivity and its temperature dependence; Kirchhoff's laws; Wheatstone bridge; potentiometer.
+
+Unit III: Magnetic Effects of Current and Magnetism
+Chapter 4: Moving Charges and Magnetism — Biot-Savart law; Ampere's circuital law; force on a moving charge in a magnetic field; moving coil galvanometer.
+
+Assessment
+Theory examination: 70 marks, 3 hours.
+Practical examination: 30 marks (experiments, project and viva).

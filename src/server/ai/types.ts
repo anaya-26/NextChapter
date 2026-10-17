@@ -7,6 +7,7 @@ export type AiFeature =
   | "answer_feedback"
   | "flashcards_generate"
   | "coverage_match"
+  | "roadmap_enrich"
   | "companion_chat"
   | "memory_extract"
   | "journal_suggestions"

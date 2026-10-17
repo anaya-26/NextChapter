@@ -415,6 +415,14 @@ enum TopicKind {
   OPTIONAL
 }
 
+/// Where a roadmap topic came from: the syllabus itself, an AI suggestion, the mock, or the student.
+enum TopicOrigin {
+  SYLLABUS
+  AI
+  MOCK
+  STUDENT
+}
+
 enum TopicStatus {
   NOT_STARTED
   IN_PROGRESS
@@ -441,6 +449,10 @@ model Topic {
   title                  String
   description            String?
   kind                   TopicKind           @default(REQUIRED)
+  origin                 TopicOrigin         @default(SYLLABUS)
+  /// "SYLLABUS" (stated), "AI", "MOCK" or "RULES" (generic template)
+  objectivesSource       String?
+  prerequisitesSource    String?
   order                  Int
   objectives             String[]
   estimatedMinutes       Int?
