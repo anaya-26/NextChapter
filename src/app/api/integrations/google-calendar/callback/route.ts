@@ -1,3 +1,4 @@
+import { publicUrl } from "@/lib/public-url";
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/server/session";
 import { now } from "@/server/clock";
@@ -8,10 +9,10 @@ const NONCE_COOKIE = "nextchapter_gcal_nonce";
 /** Google redirects here after consent; the state must match this browser and signed-in student. */
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser();
-  if (!user) return NextResponse.redirect(new URL("/sign-in?next=/calendar/sync", request.url));
+  if (!user) return NextResponse.redirect(publicUrl("/sign-in?next=/calendar/sync", request.url));
   const params = request.nextUrl.searchParams;
   const back = (q: string) => {
-    const res = NextResponse.redirect(new URL(`/calendar/sync?${q}`, request.url));
+    const res = NextResponse.redirect(publicUrl(`/calendar/sync?${q}`, request.url));
     res.cookies.delete({ name: NONCE_COOKIE, path: "/api/integrations/google-calendar" });
     return res;
   };

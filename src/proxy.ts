@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
+import { publicUrl } from "@/lib/public-url";
 
 /**
  * Optimistic routing only: checks for a session cookie and redirects. Real authorisation
@@ -25,12 +26,12 @@ export function proxy(request: NextRequest) {
   const hasSession = Boolean(getSessionCookie(request));
 
   if (!hasSession && APP_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
-    const url = new URL("/sign-in", request.url);
+    const url = publicUrl("/sign-in", request.url);
     url.searchParams.set("next", `${pathname}${search}`);
     return NextResponse.redirect(url);
   }
   if (hasSession && (AUTH_PAGES.includes(pathname) || pathname === "/")) {
-    return NextResponse.redirect(new URL("/today", request.url));
+    return NextResponse.redirect(publicUrl("/today", request.url));
   }
   return NextResponse.next();
 }

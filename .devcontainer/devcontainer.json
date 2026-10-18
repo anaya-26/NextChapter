@@ -1,0 +1,19 @@
+{
+  // Opens NextChapter in GitHub Codespaces (or VS Code Dev Containers) with a ready database,
+  // settings and a demo account. See "Run it in your browser" in README.md.
+  "name": "NextChapter",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "NextChapter app", "onAutoForward": "openBrowser" }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postAttachCommand": "bash .devcontainer/start.sh",
+  "customizations": {
+    "codespaces": { "openFiles": ["README.md"] },
+    "vscode": { "extensions": ["dbaeumer.vscode-eslint", "Prisma.prisma"] }
+  }
+}

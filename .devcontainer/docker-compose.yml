@@ -1,0 +1,21 @@
+# The app container shares the database container's network, so the database is at localhost:5432.
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    network_mode: service:db
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: nextchapter
+      POSTGRES_PASSWORD: change-me
+      POSTGRES_DB: nextchapter_dev
+
+volumes:
+  postgres-data:

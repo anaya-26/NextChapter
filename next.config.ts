@@ -1,3 +1,4 @@
+import "dotenv/config";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
@@ -18,6 +19,20 @@ const csp = [
   "form-action 'self'",
 ].join("; ");
 
+/**
+ * The app's public address. When it differs from where the server runs — GitHub Codespaces,
+ * a tunnel, a proxy that forwards its own host — Server Actions and dev assets must accept it.
+ */
+const publicOrigin = (() => {
+  try {
+    return process.env.BETTER_AUTH_URL ? new URL(process.env.BETTER_AUTH_URL) : null;
+  } catch {
+    return null;
+  }
+})();
+// localhost is always allowed for dev assets; Server Actions compare host *and* port, so add it whenever set.
+const needsDevOrigin = !!publicOrigin && !["localhost", "127.0.0.1"].includes(publicOrigin.hostname);
+
 const nextConfig: NextConfig = {
   // Lets end-to-end tests run a separate dev server without clashing with `npm run dev`.
   distDir: process.env.NEXT_DIST_DIR || ".next",
@@ -33,8 +48,9 @@ const nextConfig: NextConfig = {
   },
   // Heavy server-only libraries are loaded from node_modules at runtime instead of bundled.
   serverExternalPackages: ["tesseract.js", "unpdf", "mammoth", "@prisma/client", "pg"],
+  ...(needsDevOrigin ? { allowedDevOrigins: [publicOrigin!.hostname] } : {}),
   experimental: {
-    serverActions: { bodySizeLimit: "30mb" },
+    serverActions: { bodySizeLimit: "30mb", ...(publicOrigin ? { allowedOrigins: [publicOrigin.host] } : {}) },
     // Proxy buffers request bodies; keep this above the Server Action limit so uploads are never truncated.
     // Large media uploads go to /api/uploads, which the proxy matcher excludes.
     proxyClientMaxBodySize: "32mb",

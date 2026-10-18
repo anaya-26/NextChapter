@@ -9,6 +9,22 @@ The app is honest about what it can do. Every AI output is labelled, simulated A
 
 ---
 
+## Try it in your browser — nothing to install
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badges/open.svg)](https://codespaces.new/anaya-26/NextChapter?quickstart=1)
+
+1. Click the button above (sign in to GitHub if asked), then click **Create codespace**.
+2. Wait about 5 minutes the first time. GitHub builds a private computer in the cloud for you, sets up the database, and fills in demo data. You'll see a code editor and a terminal with progress messages.
+3. When the terminal says the app is ready, a new browser tab opens with NextChapter. (If it doesn't, open the **Ports** tab at the bottom and click the globe icon next to port 3000.)
+4. Sign in with **demo@example.com** and password **nextchapter-demo**. This account already has about three months of clearly labelled demo activity.
+
+Good to know:
+
+- Only you can open your codespace's address — it needs your GitHub login.
+- AI answers say **“Simulated AI”** until you add a real key: on GitHub go to **Settings → Codespaces → Secrets**, add `ANTHROPIC_API_KEY` and allow it for this repository, then stop and restart the codespace.
+- GitHub gives personal accounts a free monthly allowance of codespace time. Stop the codespace when you're done (**Code → Codespaces → ⋯ → Stop codespace**); it stops by itself after 30 minutes of inactivity.
+- To come back later, click the same button. It reopens your codespace, and the app starts again automatically.
+
 ## What students can do
 
 | Space | Highlights |
